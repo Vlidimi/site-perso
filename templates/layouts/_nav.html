@@ -1,0 +1,21 @@
+<nav id="navbar">
+	<div class="wrapper">
+		<a href="{% url 'home' %}" class="navbar-brand">Fondation</a>
+		<ul class="navbar-right">
+			<li> <a href="{% url 'blog_livreSF:index' %}">Livres</a>  </li>
+			<li> Films </li>
+			<li> Nouvelles </li>
+			<li> Forum </li>
+			{% if user.is_authenticated %}
+			<li> <a href="{% url 'connexion:profile' %}"> Voir son profil </a></li>
+			<li> <a href="{% url 'connexion:deconnexion' %}"> Se déconnecter</a></li>
+			<strong> Coucou {{ user.username }} </strong>
+
+			{% else %}
+			<li> <a href="{% url 'connexion:connexion' %}"> Connexion</a></li>
+			{% endif %}
+			
+
+		</ul>
+	</div>
+</nav>

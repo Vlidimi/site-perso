@@ -1,0 +1,202 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Profil{% endblock %}
+
+{% block content %} 
+
+<br>
+<br>
+<div class="card border-0">
+    <div class="row">
+        <div class="card col-md-2 border-0">
+            <img style="display: block; margin-left: auto; margin-right: auto; max-width: 17rem; width: 100%; height: 15rem;object-fit: cover;   " src="{{ MEDIA_URL }}{{ profile.avatar }}" > <!-- Première partie pour centrer l'image, la seconde pour adapter la taille image en fonction de la fenêtre -->
+            <div style="text-align: center;font-size:  x-large;"> {{ profile.pseudo }} </div>
+        </div>
+        <div class="col-md-10">
+            <div class="btn-group d-flex" >
+                <button type="button" class="btn btn-primary w-100" href="#tab1" data-toggle="tab"><span class="fa fa-user" aria-hidden="true"></span>
+                    <div class="hidden-xs">Profil public</div>
+                </button>
+                {% if profile.user == request.user %}
+                    <button type="button" class="btn btn-default w-100" href="#tab2" data-toggle="tab">
+                        <span class="fa fa-user-secret" aria-hidden="true"></span>
+                        <div class="hidden-xs">Profil privé</div>
+                    </button>
+                    <button type="button" class="btn btn-default w-100" href="#tab3" data-toggle="tab">
+                        <span class="fa fa-envelope" aria-hidden="true"></span>
+                        <div class="hidden-xs">Messagerie</div>
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-default w-100" href="#tab2" data-toggle="tab" disabled>
+                        <span class="fa fa-user-secret" aria-hidden="true"></span>
+                        <div class="hidden-xs">Profil privé</div>
+                    </button>
+                    <button type="button" class="btn btn-default w-100" href="#tab3" data-toggle="tab" disabled>
+                        <span class="fa fa-envelope" aria-hidden="true"></span>
+                        <div class="hidden-xs">Messagerie</div>
+                    </button>
+                {% endif %}
+                
+            </div>
+
+            <div class="well">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        {% if profile.user != request.user %}
+                            <div class="desc">
+                                <a href="{% url 'connexion:write_a_message_destinataire' profile.slug_pseudo %}"> Envoyer un message à {{ profile.pseudo }}</a>
+                            </div>
+                        {% endif %}
+                        {% if profile.prenom != '' %}
+                        <div class="desc">
+                            <span class="label_desc"> Prénom :  </span>
+                            {{ profile.prenom }}
+                        </div>
+                        {% endif %}
+                        {% if profile.nom != '' %}
+                        <div class="desc">
+                            <span class="label_desc"> Nom :   </span>
+                            {{ profile.nom }}
+                        </div>
+                        {% endif %}
+                        {% if profile.birth_date != '' %}
+                        <div class="desc">
+                            <span class="label_desc"> Date naissance :  </span>
+                         {{ profile.birth_date }}
+                        </div>
+                        {% endif %}
+                        <div class="desc">
+                            <span class="label_desc"> Nombre d'articles écrit :  </span>
+                            {{ profile.nombre_post_ecrit }}
+                        </div>
+                        <div class="desc">
+                            <span class="label_desc"> Rang :   </span>
+                            {{ profile.rang }}
+                        </div>
+                        {% if profile.signature != '' %}
+                        <div class="desc">
+                            <span class="label_desc"> Signature :  </span>
+                            <span style="font-style: italic"> {{ profile.signature }} </span>
+                        </div>
+                        {% endif %}
+                        {% if profile.bio != '' %}
+                        <div class="desc">
+                            <span class="label_desc"> Bio :   </span>
+                            <br>
+                            {{ profile.bio }}
+                        </div>
+                        {% endif %}
+                        <br>
+                        {% if profile.user == request.user %}
+                            <div class="desc"><a href="{% url 'connexion:profile-change' %}"> Modifier son profil</a></div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                        <div class="desc">
+                            <span class="label_desc"> Username :  </span>
+                            {{ profile.user.username }}
+                        </div>
+                        <div class="desc">
+                            <span class="label_desc"> Mail :   </span>
+                            {{ profile.user.email }}
+                        </div>
+                        <br>
+                        {% if profile.user == request.user %}
+                            <div class="desc"><a href="{% url 'connexion:profile-change' %}"> Modifier son profil </a></div>
+                            <div class="desc"><a href="{% url 'connexion:change_password' %}"> Changer son mot de passe</a></div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane" id="tab3">
+                        <h3><a href="{% url 'connexion:write_a_message' %}">Envoyer un message </a></h3>
+                        <br>
+                        <h3> Boite de réception</h3>
+                        {% for i in mailbox %}
+                            <div class="card">
+                                <div class="objet_message" >
+                                    <span href="" id="{{ i.pk }}" style="cursor: pointer; color: #0000FF; margin: 0px 0 0 0px; ">
+                                        <span style="width: 30%;
+    float: left;"> De : {{ i.expediteur.profile.pseudo }} </span>
+                                        <span style="width: 30%;
+    float: left;"> objet: {{ i.objet_message }} </span> 
+                                        <span style="width: 30%;
+    float: left;"> le {{ i.date.date }} à {{ i.date.time }}</span> 
+                                    </span>  
+                                    <input style="float: right; position: static;" type="checkbox" value="{{ i.pk }}" check="False">
+                                    <p id="objet_{{ i.pk }}" style="display: none;"> {{ i.message }} <br> <a href="{% url 'connexion:write_a_message_repondre' i.expediteur.profile.pseudo %}">Répondre</a> </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <input type="submit" id="Suppr_button" value="Supprimer les messages sélectionnés" />                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    {% block jquery %}
+
+    $("div[class=objet_message]>span[href]").click(function(){
+        var this_ = $(this)
+        var value_id = '#objet_'+this_.attr('id');
+        if($(value_id).css('display') =='none'){
+            $(value_id).show();
+        }
+        else{
+            $(value_id).hide();
+        }
+    })
+    var liste_value = Array();
+    $("div[class=objet_message]>input").click(function(){
+        var this_ = $(this);
+        var value = this_.attr('value');
+        var check = this_.attr('check');
+        if (check == "False"){
+            liste_value.push(value);
+            console.log(liste_value);
+            this_.attr('check', "True");
+        } else {
+            liste_value.splice(liste_value.indexOf(value), 1);
+            console.log(liste_value)
+            this_.attr('check', "False")
+        }
+        console.log(value)
+        
+    })
+    $("input[id=Suppr_button]").click(function(){
+        console.log(liste_value);
+        $.ajax({
+            type: "GET",
+            url: "{% url 'connexion:profile' %}",
+            data: {
+                'liste_value': liste_value
+            },
+            success: function(){
+                location.reload();
+                
+
+            }
+        });
+    });
+    {% endblock %}
+</script>
+
+                           <!-- <div class="accordion" id="accordionExample">  
+                           <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Collapsible Group Item #1
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        {{ i.message }}
+                                    </div>
+                                </div>
+                            </div> 
+                            </div>-->

@@ -1,0 +1,206 @@
+{% extends 'layouts/base.html' %}
+{% block title %}{{ article.titre }}{% endblock %}
+{% block content %}
+
+
+<div class="card  text-center border-0">
+	<div class="card-body">
+		
+		<blockquote class="blockquote mb-0">	
+			<h3> 
+				{{ article.titre }} de {{ article.auteur_livre }}
+			</h3>
+			{% if article.photo != '' %}
+				<img style="color: #fff;height:15rem;background: center no-repeat;background-size: cover;" src="{{ MEDIA_URL }}{{ article.photo }}">
+			{% endif %}
+			
+			<footer class="blockquote-footer" >
+				<br>
+				Régigé par {{ article.auteur_blog.profile.pseudo }}
+				<cite style="margin-left: 20px;">
+					{{ posts_len }} mots
+				</cite> 
+				<cite style="margin-left: 20px;font-style: normal;" >
+					<a class='like-btn' data-href="{{ article.get_like_api_url }}" href="{{ article.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ article.slug }}">
+						{{ article.likes.count }} 
+					    {% if user in article.likes.all %}
+					        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+					    {% else %}
+					        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+					    {% endif %}
+					</a>  
+					<img id="{{ article.slug }}" style="height:25px;margin-bottom: 7px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png">
+				</cite>
+				<cite style="margin-left: 20px;">
+					{{ article.commentsection_set.count }} commentaires
+				</cite> 
+				<cite style="margin-left: 20px;">
+					{{ article.date|date:"DATE_FORMAT" }}
+				</cite>
+				<cite style="margin-left: 20px;">
+					{% if article.modification %}
+						modifié le {{ article.updated_at|date:"DATE_FORMAT" }}
+					{% endif %} 
+				</cite>
+			</footer>
+
+		</blockquote>
+	</div>
+
+</div>
+<div class="card text-center border-0">
+	<div class="card-body">
+		{% if resume != '' %}
+			<p> 
+				<h2> Résumé : </h2>
+				<br>
+				{{ resume|safe|linebreaks }}
+			</p>
+		{% endif %}
+		<br>
+		{% if article.source_resume != '' %}
+			<p>
+			 	<em>Source : </em> 
+			 	<a href="{{ article.source_resume }}">{{ article.source_resume }}</a>
+			</p>
+		{% endif %}
+		<br>
+		{% if contenu != '' %}
+			<p>
+				<h2>Contenu :</h2> 
+				<br> 
+				{{ contenu|safe|linebreaks }}
+			</p>
+		{% endif %}
+		<br>
+		{% if article.source_contenu != '' %}
+			<p>
+				<em>Source : </em> 
+				<a href="{{ article.source_contenu }}">{{ article.source_contenu }}</a> 
+			</p>
+		{% endif %}
+		<br>
+		{% if article.auteur_blog.profile.signature %}
+			<p style="font-style:italic">{{ article.auteur_blog.profile.signature }}</p>
+		{% endif %}
+	</div>
+
+	<p> 
+		Vous avez aimé ? Faites le savoir ! 
+		<br>
+		Smash that button
+		<a class='like-btn' data-href="{{ article.get_like_api_url }}" href="{{ article.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ article.slug }}">
+			{{ article.likes.count }} 
+		    {% if user in article.likes.all %}
+		        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+		    {% else %}
+		        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+		    {% endif %}
+		</a>  
+		<img id="{{ article.slug }}" style="height:25px;margin-bottom: 7px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png">
+		<br>
+		<div style="margin-top: -23px;">Or leave a comment !</div>  
+	</p>
+	<p>
+		
+	</p>
+</div>
+{% if user.username == article.auteur_blog or user.is_superuser %}
+	<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:post-update' article.id article.slug %}">Modifier l'article</a>
+	<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:post-delete' article.id article.slug %}">Supprimer l'article</a>
+	<br>
+	<br>
+{% endif %}
+
+
+
+
+
+
+{% if modifier %}
+	{% for comment in article.commentsection_set.all %}
+		<br>
+		{% if comment.id != comment_change.id %}
+			<div class="container" style="left: 0;position: relative;" >
+	            <div class="card-group row" style="width: 100%; ">
+	                <div class="card col-md-1 border-0">
+	                    <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
+	                </div>
+	                <div class="card border">
+	                	<h5 class="card-title"> 
+	                		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
+	                		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
+	                		posté le : {{ comment.date }} 
+	                		{% if comment.modification %}
+								modifié le : {{ comment.updated_at }}
+							{% endif %}	
+							</div>		
+						</h5>
+						<div class="card-body">
+							{{ comment.comment }}
+							<br>
+							<br>
+							{% if user.username == comment.auteur_comment or user.is_superuser %}
+								<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
+								<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
+							{% endif %} 
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		{% else %}
+			<form method="post" enctype="multipart/form-data" novalidate>
+				{% csrf_token %}
+				{% include './form_help.html' with form=form %}
+			<input type="submit" value="Modifier" />
+			</form>
+		{% endif %}
+	<br>
+	{% endfor %}
+{% else %}
+	<br>
+	 <form method="post" enctype="multipart/form-data" novalidate>
+	    {% csrf_token %}
+	    {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
+	    <input type="submit" value="Envoyer" />
+	</form>
+
+	<br>
+	{% for comment in article.commentsection_set.all %}
+
+		<div class="container" style="left: 0;position: relative;" >
+            <div class="card-group row" style="width: 100%; ">
+                <div class="card col-md-1 border-0">
+                    <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
+                </div>
+                <div class="card border">
+                	<h5 class="card-title"> 
+                		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
+                		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
+                		posté le : {{ comment.date }} 
+                		{% if comment.modification %}
+							modifié le : {{ comment.updated_at }}
+						{% endif %}	
+						</div>		
+					</h5>
+					<div class="card-body">
+						{{ comment.comment }}
+						<br>
+						<br>
+						{% if user == comment.auteur_comment or user.is_superuser %}
+							<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
+							<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
+						{% endif %} 
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+	{% endfor %}
+
+{% endif %}
+<br>
+<a href="{% url 'blog_livreSF:index' %}">Retour à l'index </a>
+{% endblock %}

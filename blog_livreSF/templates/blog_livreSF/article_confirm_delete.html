@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Blog{% endblock %}
+
+{% block content %} 
+
+<!-- <form action="{% url 'blog_livreSF:write_a_blog' %}" method="post">
+ -->
+
+<h2> Etes vous sur de vouloir supprimer le post {{ object.titre }} ?</h2>
+<div id='tenta1_message' style="display: none;"> En appuyant sur ce bouton, j'espère que vous êtes conscient de ce que vous faites... <br></div>
+<div id='tenta2_message' style="display: none;"> Parce que moi j'en ai très bien conscience ! (Je préfère vous prévenir, il n'y a pas réellement quelqu'un qui vous parle, ce ne sont que des messages préenregistrés de mon moi du passé qui parle au nom de mon moi d'aujourd'hui, et il a tout le droit de le faire parce que je fais ce que je veux :p C'est mon moi quand même !) Donc oui j'en ai bien conscience ! <br></div>
+<div id='tenta3_message' style="display: none;"> J'ai conscience que vous comptez supprimer un article écrit avec ferveur et passion, qui vous aura pris temps et réflexion pour faire éprouver joie et bonheur à vos lecteurs ! <br>  </div>
+<div id='tenta4_message' style="display: none;"> Etes vous donc bien certain de vouloir nous priver à nous, lecteurs d'avoir le plaisir de vous relire ? Et d'empêcher aux futurs potentiels autres d'avoir le privilège de vous découvrir ? <br>  </div>
+<div id='tenta5_message' style="display: none;"> Pourquoi vouloir supprimer lorsque l'on peut modifier ? Améliorer ? Peaufiner ? Si si c'est vrai, c'est possible ! Vous ne me croyez pas ? Regardez !<br> Abracadabra ! <a class="btn btn-outline-primary" href="{% url 'blog_livreSF:show' object.id object.slug %}">Modifier</a> <br> Pouf ! Le voila ! Avec cette belle couleur bleue, qui ne serait pas tenté de cliquer dessus ;) Pas moi en tout cas :3 <br></div>
+<div id='tenta6_message' style="display: none;"> Décidemment ... vous semblez bel et bien convaincu de votre choix ... A mon grand regret bien entendu ! J'espère tout de même que vous conserverez le fruit de votre travail au moins pour vous en le sauvegardant de votre côté, et que vous continuerez à persister dans la  même veine ! <br>  </div>
+<div id='tenta7_message' style="display: none;"> Décrire des articles hein ! Pas de les supprimer :p <br>  </div>
+<button class="btn btn-outline-danger" id="tenta1">Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta2" >Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta3" >Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta4" >Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta5" isLast="False" >Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta6" >Yes, Delete</button>
+<button class="btn btn-outline-danger" style="display: none;" id="tenta7" >Yes, Delete</button>
+<a id="cancel_button" class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.id object.slug %}"">Cancel</a>
+
+ <form id="final_tenta" style="display: none" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <input class="btn btn-outline-danger" type="submit" value="Yes, Delete" />
+    <a class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.id object.slug %}">Cancel</a>
+</form>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<!-- {% for genre in Genres %}
+	<option value="{{ genre.id }}" >{{ genre.genre_litteraire }}</option>
+	
+{% endfor %} -->
+{% load widget_tweaks %}
+
+<div class="form-group">
+	{{ field.label_tag }}
+
+	{% if form.is_bound %}
+	  {% if field.errors %}
+	    {% for error in field.errors %}
+	      <div class="invalid-feedback">
+	        {{ error }}
+	      </div>
+	    {% endfor %}
+	  {% else %}
+	    {% render_field field class="form-control is-valid" %}
+	  {% endif %}
+	{% else %}
+	  {% render_field field class="form-control" %}
+	{% endif %}
+
+	{% if field.help_text %}
+	  <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+	{% endif %}
+</div>

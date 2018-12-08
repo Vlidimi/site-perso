@@ -1,0 +1,174 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Blog{% endblock %}
+
+
+{% block content %} 
+
+<br>
+<div class="card" style="z-index: 1;right: 0; position: fixed; width: 20%;" >
+    <div class="card">
+    <div class="card-body">
+        <h5 class="card-title"> Recherche par auteur ou par titre</h5>
+        <p> {% csrf_token %} <input type="text" name="search" id="search" style="width: 100%">
+            {% csrf_token %}
+                <ul id="search-results">
+                    
+                </ul>
+        </p>
+    </div>
+    </div>
+    <div class="card">
+    <div class="card-body">
+        <h5 class="card-title"> Recherche par genre littéraire</h5>
+        <p> <form action="" method="get">
+                {% csrf_token %}
+                <input list="genre_litteraire" name="genre" style="width: 100%">
+                <datalist id="genre_litteraire">
+                    <option value="Tous les genres">
+                    {% for genre in genres %}
+                    <option value="{{ genre.genre_litteraire }}">
+                    {% endfor %}
+                </datalist>
+                <input type="submit">
+            </form>
+
+    </div>
+    </div>
+
+    <div class="card">
+    <div class="card-body">
+        <h5 class="card-title"> Divers</h5>
+        <a href="{% url 'blog_livreSF:index' %}"> Retour à l'index général</a> <br>
+        <a href="{% url 'blog_livreSF:write_a_blog' %}"> Ecrire un article</a>
+
+    </div>
+    </div>
+</div>
+
+{% if posts %}
+    {% for article in posts %} 
+    <!-- <div class="container float-left"> -->
+        <div class="container" style="left: 0;position: relative;" >
+            <div class="card-group row " style="width: 85%; ">
+                <div class="card col-md-3">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ article.auteur_blog.profile.avatar }}" alt="Card image cap">
+                    <div class="card-body text-center">
+                    <h5 class="card-title"><a href="{% url 'connexion:profile-other-user' article.auteur_blog.profile.slug_pseudo %}">{{ article.auteur_blog.profile.pseudo }}</a> <br> <p style="font-size: small; font-style:italic ;">{{ article.auteur_blog.profile.rang }}</p ></h5>
+                    <p style="font-size: 80%;" class="card-text"> Nombre d'articles: {{ article.auteur_blog.profile.nombre_post_ecrit }} </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                {% if article.photo != '' %}
+                       <!--  <div class="row"> -->
+                            <div class="card-md-8">
+
+                                <div class="card-body">
+                                    <img class="float-right" style="color: #fff;height:8rem;background: center no-repeat;background-size: cover;" src="{{ MEDIA_URL }}{{ article.photo }}">
+                                <h4 class="card-title">{{ article.titre }} de {{ article.auteur_livre }}</h4> 
+                                <p class="card-title">Catégorie :
+                                {% for i in article.genre.all %} 
+                                        &nbsp; {{ i.genre_litteraire }} 
+                                {% endfor %} </p>
+                                <p class="card-title">
+                                    Nombre de mots : {{ article.word_count}}
+                                    <font style="float: right;margin-right: 1em;font-size: 20px"> 
+                                        <a class='like-btn' data-href="{{ article.get_like_api_url }}" href="{{ article.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ article.slug }}">
+                                            {{ article.likes.count }} 
+                                            {% if user in article.likes.all %}
+                                                <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+                                            {% else %}
+                                                <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+                                            {% endif %}
+                                        </a>  
+                                        <img id="{{ article.slug }}" style="height:25px;margin-bottom: 9px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png"> 
+                                    </font>
+                                </p>
+
+                                 
+
+                                </div>
+
+                            </div>
+
+                            <!-- <div class="col-md-4"> --> 
+                                <!-- <div style="color: #fff;height:8rem; background: url({{ MEDIA_URL }}{{ article.photo }}) center no-repeat;background-size: cover;" ></div> -->
+
+                                 
+                                
+                            <!-- </div> -->
+                        <!-- </div> -->
+                {% else %}
+                    <div class="card-md-4">
+                        <div class="card-body">
+                        <h4 class="card-title">
+                            {{ article.titre }} de {{ article.auteur_livre }}
+                            <font style="float:right;"> 
+                                <a class='like-btn' data-href="{{ article.get_like_api_url }}" href="{{ article.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ article.slug }}" >{{ article.likes.count }} 
+                                    {% if user in article.likes.all %}
+                                        <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+                                    {% else %}
+                                        <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+                                    {% endif %}
+                                </a>  
+                                <img id="{{ article.slug }}" style="height:25px;margin-bottom: 9px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png"> 
+                            </font>
+                        </h4> 
+                        <p class="card-title">Catégorie :
+                                {% for i in article.genre.all %} 
+                                        &nbsp; {{ i.genre_litteraire }} 
+                                {% endfor %} </p>
+
+                                <p class="card-title">Nombre de mots : {{ article.word_count}} </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                        <div class="card-md-4">
+                            <div class="card-body">
+                                <p class="card-text">{% if article.resume != '' %}{{ article.resume|linebreaks|truncatechars:500 }}{% else %}{{ article.contenu|linebreaks|truncatechars:500 }}     {% endif %}</p>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'blog_livreSF:show' article.id article.slug %}" class="btn btn-primary">Lire la suite</a>
+                                {% else %}
+                                    <a href="{% url 'blog_livreSF:show-noregister' article.id article.slug %}" class="btn btn-primary">Lire la suite</a>
+                                {% endif %}
+                            </div>
+                        </div>
+ 
+   <!-- {% if article.photo == '' %}
+ 
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <p class="card-text">{% if article.resume != '' %}{{ article.resume|linebreaks|truncatechars:500 }}{% else %}{{ article.contenu|linebreaks|truncatechars:500 }}{% endif %}</p>
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'blog_livreSF:show' article.id article.slug %}" class="btn btn-primary">Lire la suite</a>
+                                    {% else %}
+                                        <a href="{% url 'blog_livreSF:show-noregister' article.id article.slug %}" class="btn btn-primary">Lire la suite</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4"> 
+                                <div style="color: #fff;height:20rem;background: url({{ MEDIA_URL }}{{ article.photo }}) center no-repeat;background-size: cover;" >
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %} -->
+                    <!--  <img style="color: #fff;height:10rem;background: center no-repeat;background-size: cover;" src="{{ MEDIA_URL }}{{ article.photo }}"> --> 
+                </div>
+            </div>
+        </div>  
+        <br>
+      
+
+    {% endfor %}
+       
+
+{% else %}
+    <p> Pinut</p>
+{% endif %}
+{% endblock %}
+
+    <!-- {% include 'layouts/pagination.html' with users=posts %} -->

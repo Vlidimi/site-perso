@@ -1,0 +1,31 @@
+{% load widget_tweaks %}
+
+{% if field.label == particular_field %}
+  <div class="form-group">
+    {{ particular_label_tag }}
+
+    {% if form.is_bound %}
+      {% if field.errors %}
+        {% render_field field class="form-control is-invalid" %}
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% render_field field class="form-control is-valid" placeholder=particular_placeholder %}
+      {% endif %}
+    {% else %}
+      {% render_field field class="form-control" placeholder=particular_placeholder %}
+    {% endif %}
+
+    {% if particular_help_text %}
+      <small class="form-text text-muted">{{ particular_help_text }}</small>
+    {% else %}
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    {% endif %}      
+
+  </div>
+{% endif %}

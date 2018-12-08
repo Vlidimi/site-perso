@@ -1,0 +1,30 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+	<div class="wrapper">
+		{% if user.is_authenticated %}
+		<h1 style="position: sticky;"> Bienvenu {{ user.username }} ! </h1>
+		{% else %}
+		<h1> Bienvenu jeune inconnu(e) ! </h1>
+		{% endif %}
+
+   		
+
+	</div>
+	<div class="gauche">
+		<p>  Vous cherchez un <a href="{% url 'blog_livreSF:index' %}" class="wrapper-link" >livre</a> ? un film ? Ou bien vous voulez découvrir une nouvelle ? Ou enfin vous voulez discuter sur le forum ? </p>
+	</div>
+	<div class="droite">
+		<h2 align="left"> Derniers Ajouts</h2>
+		<h3> Livres : </h3>
+		<p align="left"> {% for last in last_posts %}
+			<li> <a href="{% url 'blog_livreSF:show' last.pk last.slug %}"> {{ last.titre }} </a></li>
+			{% endfor %}
+		</p>
+	</div>
+ 	{% include 'layouts/_derniereactu.html' %} 
+{% endblock %}
+
+
+

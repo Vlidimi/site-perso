@@ -1,0 +1,19 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %} 
+{% if envoi %}Votre message a bien été envoyé !{% endif %}
+
+<!-- <form action="{% url 'blog_livreSF:write_a_blog' %}" method="post">
+ -->
+ <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include './form_help.html' with form=form %}
+    <input type="submit" value="Submit" />
+</form>
+
+ <p><a href="{% url 'blog_livreSF:show' article.id article.slug %}">Retour au post</a></p>
+
+{% endblock %}
+

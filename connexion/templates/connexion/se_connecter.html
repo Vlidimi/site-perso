@@ -1,0 +1,26 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %} 
+
+<h1>Se connecter</h1>
+
+{% if error %}
+<p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
+{% endif %}
+
+{% if user.is_authenticated %}
+Vous êtes connecté, {{ user.username }} !
+Vous êtes libre d'aller vous ballader du côté des <a href="{% url 'blog_livreSF:index' %}">Livres</a>, des films, des nouvelles et du forum.
+{% else %}
+<form method="post" action=".">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Se connecter" />
+</form>
+<p> Mot de passe oublié ? <a href="{% url 'connexion:password_reset' %}"> ici </a></p>
+<p> Nouveau membre ? Par <a href="{% url 'connexion:enregistrement' %}"> ici </a> pour s'inscrire :)</p>
+{% endif %}
+
+{% endblock %}

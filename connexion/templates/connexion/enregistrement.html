@@ -1,0 +1,73 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Nouveau Membre{% endblock %}
+
+{% block javascript %}
+  <script>
+    $("#id_username").change(function () {
+      var username = $(this).val();
+
+      $.ajax({
+        url: '/connexion/ajax/validate_username',
+        data: {
+          'username': username
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("A user with this username already exists.");
+          }
+        }
+      });
+
+    });
+  </script>
+{% endblock %}
+
+{% block content %} 
+
+{% if envoi %}Votre message a bien été envoyé !{% endif %}
+
+<!-- <form action="{% url 'blog_livreSF:write_a_blog' %}" method="post">
+ -->
+<!--  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <h3> Données visibles que par vous même :</h3>
+    {% include './form_help.html' with form=form %}
+    <h3> Données visibles par tout le monde :</h3>
+    {% include './form_help.html' with form=profile_form %}
+    <input type="submit" value="Submit" />
+</form> -->
+
+ <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <h3> Données visibles que par vous même :</h3>
+    {% include './form_help.html' with form=form %}
+
+<!--     {% for hidden_field in form.hidden_fields %}
+	  {{ hidden_field }}
+	{% endfor %}
+
+	{% if form.non_field_errors %}
+	  <div class="alert alert-danger" role="alert">
+	    {% for error in form.non_field_errors %}
+	      {{ error }}
+	    {% endfor %}
+	  </div>
+	{% endif %}
+
+	{% for field in form.visible_fields %}
+		{{ field.label_tag }}
+		{% include './form_help_local.html' with form=form field=field particular_field='Username' particular_placeholder='' particular_label_tag='' %}
+		{% include './form_help_local.html' with form=form field=field particular_field='Email' particular_placeholder='' particular_label_tag='' particular_help_text='sa' %}
+		{% include './form_help_local.html' with form=form field=field particular_field='Password' particular_placeholder='' particular_label_tag='' %}
+		{% include './form_help_local.html' with form=form field=field particular_field='Password confirmation' particular_placeholder='' particular_label_tag='' %}
+	{% endfor %}
+ -->    
+    <h3> Données visibles par tout le monde :</h3>
+    {% include './form_help.html' with form=profile_form %}
+    <input type="submit" value="Submit" />
+</form>
+
+ <p><a href="{% url 'blog_livreSF:index' %}">Retour aux livres</a></p>
+{% endblock %}
