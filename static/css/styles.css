@@ -1,0 +1,181 @@
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+/*Reset */
+* {
+	margin: 0;
+	padding: 0;
+
+}
+
+.btn-pref .btn {
+    -webkit-border-radius:0 !important;
+}
+
+.margin {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+/* Helpers */
+.wrapper {
+	width: 95%;
+	max-width: 95%;
+	margin: 0 auto;
+}
+
+.wrapper a:hover{
+	color: #1ce;
+}
+
+.text-center {
+	text-align: center;
+}
+
+/* Main Styles */
+body {
+	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+	background-color: #fefefe;
+	padding-top: 65px;
+
+}
+
+
+
+#navbar {
+	background-color: #000;
+	border-top: 4px solid #1ce;
+	top: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 1; 
+
+	/* Pour qu'elle soit devant */
+	/*padding: 1em 0;*/
+
+}
+
+
+
+#navbar .navbar-brand {
+	font-size: 1.8em;
+	color: #fff;
+	text-decoration: none;
+	float: left;
+}
+
+#navbar .navbar-right {
+	float: right;
+}
+
+@media screen and (max-width: 850px) {
+  #navbar .navbar-brand {
+    font-size:3.2vw;
+  }
+  #navbar .navbar-right {
+  	font-size: 1.8vw;
+  }
+}
+
+#navbar .navbar-right li{
+	display: inline-block;
+	list-style: none;
+	margin-top: 1.2em;
+	margin-right: 0.8em;
+	
+}
+
+#navbar .navbar-right a{
+	text-decoration: none;
+	color: #fff;
+}
+#navbar .navbar-right a:hover{
+	color: #1ce;
+}
+
+#navbar .navbar-right li:last-child{
+	margin-right: 0em;
+}
+
+/*.navbar .navbar-right li a {
+	color: #fff;
+	text-decoration: none;
+
+.navbar .navbar-right li a:hover {
+	color: #1ce;
+}
+}*/
+#navbar .navbar-right li {
+	color: #fff;
+	text-decoration: none;
+}
+
+#navbar .navbar-right strong {
+	color: #EF0000;
+	text-decoration: none;
+}
+
+.content {
+  padding: 16px;
+}
+
+.sticky {
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 60px;
+}
+
+.gauche {
+	float: left;
+	width: 60%;
+}
+
+.droite {
+	margin-left: 70%; 
+	border: solid;
+	padding: 50px;
+	text-align: left;
+
+}
+
+
+.footer {
+	margin-top: 3em;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.footer:before{
+	content: " ";
+	display: block;
+	height: 1px;
+	background-color: #1ce;
+	width: 10%;
+	margin: 0.5em auto;
+}
+
+.desc {
+	font-size: large;
+	margin-left: 20px;
+}
+
+.desc .label_desc{
+	font-variant: small-caps;
+}
+@media screen and (max-width: 1200px) {
+  p.adaptative {
+    font-size:1.3vw;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  img.adaptative {
+    width: 144px;
+  }
+}
+
