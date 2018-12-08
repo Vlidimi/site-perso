@@ -25,7 +25,7 @@ SECRET_KEY = '7vt1v(-0ws@tyv=k^4@=i$fd9sccy)oii2+d)4r!6^0o@w1_*9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["lexcentrique.pythonanywhere.com"]
 
 
 # Application definition
