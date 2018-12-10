@@ -6,6 +6,7 @@
 
 <br>
 <br>
+
 <div class="card border-0">
     <div class="row">
         <div class="card col-md-2 border-0">
@@ -59,7 +60,7 @@
                             {{ profile.nom }}
                         </div>
                         {% endif %}
-                        {% if profile.birth_date != '' %}
+                        {% if profile.birth_date != 'None' %}
                         <div class="desc">
                             <span class="label_desc"> Date naissance :  </span>
                          {{ profile.birth_date }}
@@ -113,15 +114,19 @@
                         {% for i in mailbox %}
                             <div class="card">
                                 <div class="objet_message" >
-                                    <span href="" id="{{ i.pk }}" style="cursor: pointer; color: #0000FF; margin: 0px 0 0 0px; ">
-                                        <span style="width: 30%;
-    float: left;"> De : {{ i.expediteur.profile.pseudo }} </span>
-                                        <span style="width: 30%;
-    float: left;"> objet: {{ i.objet_message }} </span> 
-                                        <span style="width: 30%;
-    float: left;"> le {{ i.date.date }} à {{ i.date.time }}</span> 
+                                    <span href="" id="{{ i.pk }}" message_lu="{{ i.message_lu}}" style="cursor: pointer; color: #0000FF; margin: 0px 0 0 0px; ">
+                                        <span style="width: 30%; float: left;"> De : {{ i.expediteur.profile.pseudo }} </span>
+                                        <span style="width: 30%; float: left;"> Objet : {{ i.objet_message }} </span> 
+                                        <span style="width: 30%; float: left;"> Le {{ i.date.date }} à {{ i.date.time }} 
+                                            {% if i.message_lu == False %}
+                                            <span id="objet_{{ i.pk }}_Etat_message"> 
+                                                <img style="height:25px;" src="{{ MEDIA_URL }}image_site/icone_new.png">
+                                            </span>
+                                            {% endif %}
+                                        </span> 
                                     </span>  
                                     <input style="float: right; position: static;" type="checkbox" value="{{ i.pk }}" check="False">
+                                    <br>
                                     <p id="objet_{{ i.pk }}" style="display: none;"> {{ i.message }} <br> <a href="{% url 'connexion:write_a_message_repondre' i.expediteur.profile.pseudo %}">Répondre</a> </p>
                                 </div>
                             </div>
@@ -139,13 +144,29 @@
     {% block jquery %}
 
     $("div[class=objet_message]>span[href]").click(function(){
-        var this_ = $(this)
+        var this_ = $(this);
+        var message_lu = this_.attr('message_lu');
+        var id_message = this_.attr('id');
         var value_id = '#objet_'+this_.attr('id');
         if($(value_id).css('display') =='none'){
             $(value_id).show();
         }
         else{
             $(value_id).hide();
+        }
+        if( message_lu == 'False'){
+            var Etat_message = value_id+'_Etat_message'
+            console.log(Etat_message)
+            $.ajax({
+                type: "GET",
+                url: "{% url 'connexion:up_message_vu' %}",
+                data: {
+                    'value_id': id_message,
+                },
+                success: function(data, textStatus, jqXHR){
+                    $(Etat_message).html(data);
+            }
+            })
         }
     })
     var liste_value = Array();
@@ -182,21 +203,3 @@
     });
     {% endblock %}
 </script>
-
-                           <!-- <div class="accordion" id="accordionExample">  
-                           <div class="card">
-                                <div class="card-header" id="headingOne">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Collapsible Group Item #1
-                                    </button>
-                                    </h5>
-                                </div>
-
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        {{ i.message }}
-                                    </div>
-                                </div>
-                            </div> 
-                            </div>-->

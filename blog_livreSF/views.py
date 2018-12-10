@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
+from connexion.models import Profile
 # Create your views here.
 
 def index(request):
@@ -143,7 +144,10 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 	login_url = 'connexion:connexion'
 
 	def get_success_url(self): #Renvoie l'url en cas de succès
-		messages.danger(self.request, "Article ... supprimé ... avec succès :( Pour la peine voilà du rouge ! Je vous avez pourtant dit de choisir la pillule bleue ... En espérant profiter d'un prochain article écrit par vos soins :)" )
+		user_profile = Profile.objects.get(user = self.request.user)
+		user_profile.nombre_post_ecrit -= 1 
+		user_profile.save()
+		messages.error(self.request, "Article ... supprimé ... avec succès :( Pour la peine voilà du rouge ! Je vous avez pourtant dit de choisir la pillule bleue ... En espérant tout de même profiter d'un prochain article écrit par vos soins :)" )
 		return reverse("blog_livreSF:index")
 
 	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
@@ -217,7 +221,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 	def form_valid(self, form): #Permet de fixer des valeurs du modèle
 		form.instance.auteur_comment = User.objects.get(username = self.request.user)
 		form.instance.article = self.get_object()
-		messages.success(self.request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager vos sentiments :) (ou autre élucubration, j'adoooooore ça :D ) ")
+		messages.success(self.request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
 		return super().form_valid(form)
 
 	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
@@ -235,6 +239,7 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	model = CommentSection
 	form_class = CommentSectionForm
 	template_name = 'blog_livreSF/show.html'
+	# template_name = 'blog_livreSF/ajax_modify_comment.html'
 
 	def form_valid(self, form): #Permet de fixer des valeurs du modèle
 		form.instance.modification = True
@@ -272,4 +277,11 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
-
+def modify_comment(request):
+	if request.is_ajax() and request.method == 'POST':
+		id_comment = request.GET.get('id_comment', None)
+		form = CommentSectionForm(request.POST)
+		print( id_comment)
+		return render(request, 'blog_livreSF/ajax_modify_comment.html', {'form' : form})
+	elif request.method == 'POST':
+		print("coucou")

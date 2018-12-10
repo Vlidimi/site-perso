@@ -15,12 +15,6 @@ from .views import (
 from . import views
 
 app_name='blog_livreSF'
-# urlpatterns = [
-# 	path('', views.index, name='index'),
-# 	path('<int:id>/<slug:slug>', views.show, name='show'),
-# 	path('<int:id>', views.show),
-# 	path('write_a_blog/', views.write_a_blog, name='write_a_blog'),
-# ]
 
 urlpatterns = [
 	path('', PostListView.as_view(), name='index'),
@@ -36,5 +30,7 @@ urlpatterns = [
 	path('<int:id>/<slug:slug>/commentdelete/<int:pk>/', CommentDeleteView.as_view(), name='comment-delete'),
 	path('ajax/search/', views.search_title_auteur, name='ajax-search-titre'),
 	path('ajax/add_genre/', views.add_genre, name='add_genre'),
+
+	path('ajax/modify_comment/', views.modify_comment, name='ajax-modify-comment'),
 
 ]

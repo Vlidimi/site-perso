@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.db.models import Q
 
 def suppr_mail(request):
 	if request.method == "POST":
@@ -65,6 +67,7 @@ def enregistrement(request):
 		profile_form = ProfileForm()
 	return render(request, 'connexion/enregistrement.html', {'form': form, 'profile_form': profile_form})
 
+@login_required
 def sendmail(request):
 	if request.method == 'POST':
 		form = MailBoxForm(request.POST)
@@ -81,6 +84,7 @@ def sendmail(request):
 		form = MailBoxForm()
 	return render(request, 'connexion/write_a_message.html', { 'form': form, })
 
+@login_required
 def sendmail_repondre(request, pseudo):
 
 	if request.method == 'POST':
@@ -98,6 +102,7 @@ def sendmail_repondre(request, pseudo):
 		form = MailBoxFormBis()
 	return render(request, 'connexion/write_a_message.html', { 'form': form, })
 
+@login_required
 def sendmail_destinataire(request, slug):
 	if request.method == 'POST':
 		form = MailBoxFormBis(request.POST)
@@ -119,7 +124,7 @@ def sendmail_destinataire(request, slug):
 def user_profile_change(request):
 	if request.method == 'POST':
 		user_form = UserUpdateForm(request.POST, instance=request.user)
-		profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+		profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
 		if user_form.is_valid() and profile_form.is_valid():
 			user_form.save()
 			profile_form.save()
@@ -127,7 +132,7 @@ def user_profile_change(request):
 			return redirect('connexion:profile')
 	else:
 		user_form = UserUpdateForm(instance=request.user)
-		profile_form = ProfileForm(instance=request.user.profile)
+		profile_form = ProfileUpdateForm(instance=request.user.profile)
 	user_profile_ = User.objects.get(username=request.user)
 	return render(request, 'connexion/profile_change.html', {'user_form': user_form, 'profile_form':profile_form, 'user_prof':user_profile_}) 
 
@@ -142,6 +147,15 @@ def validate_username(request):
 
 from django.views.decorators.csrf import csrf_exempt
 
+@login_required
+def up_message_vu(request):
+	if request.method == "GET" and request.is_ajax():
+		mailbox = MailBox.objects.filter(destinataire=request.user)
+		id_message = request.GET.get('value_id', None)
+		message = mailbox.get(id=id_message)
+		message.message_lu = 'True'
+		message.save()
+		return render(request, 'connexion/ajax_change_message_lu.html', {'message_lu' : message.message_lu})
 @login_required
 def user_profile(request):
 	profile = request.user.profile
@@ -182,5 +196,9 @@ def change_password(request):
     })
 
 
+def message_non_lu(request):
+	if request.is_ajax and request.method == 'GET':
+		message_non_lu = MailBox.objects.filter(Q(destinataire=request.user) & Q(message_lu="False")).count()
 
+		return render(request, 'connexion/ajax_message_non_lu.html', {'message_non_lu': message_non_lu} )
 

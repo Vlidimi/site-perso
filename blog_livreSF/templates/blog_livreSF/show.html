@@ -160,7 +160,7 @@
 	{% endfor %}
 {% else %}
 	<br>
-	 <form method="post" enctype="multipart/form-data" novalidate>
+	<form method="post" enctype="multipart/form-data" novalidate>
 	    {% csrf_token %}
 	    {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
 	    <input type="submit" value="Envoyer" />
@@ -184,12 +184,13 @@
 						{% endif %}	
 						</div>		
 					</h5>
-					<div class="card-body">
+					<div class="card-body" id="message_{{ comment.id }}">
+
 						{{ comment.comment }}
 						<br>
 						<br>
 						{% if user == comment.auteur_comment or user.is_superuser %}
-							<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
+							<a class="btn btn-outline-primary " href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
 							<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
 						{% endif %} 
 					</div>
@@ -204,3 +205,30 @@
 <br>
 <a href="{% url 'blog_livreSF:index' %}">Retour à l'index </a>
 {% endblock %}
+
+<!-- <div class="btn btn-outline-primary comment_button" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}" id_comment="{{ comment.id }}">Modifier le commentaire</div>
+<script>
+	{% block jquery %}
+	$('.comment_button').click(function() {
+		var this_ = $(this);
+		var id_comment = this_.attr("id_comment");
+		var href_url = this_.attr("href");
+		var message_id_comment = "#message_"+id_comment
+		console.log(message_id_comment)
+		$.ajax({
+			type: "POST",
+			url: href_url,
+			
+			// url: "{% url 'blog_livreSF:ajax-modify-comment' %}",
+			data: {
+				'id_comment': id_comment,
+				'csrfmiddlewaretoken': '{{ csrf_token }}',
+			},
+
+			success: function(data){
+				$(message_id_comment).html(data)
+			}
+		})
+	})
+	{% endblock %}
+</script> -->

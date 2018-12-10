@@ -30,6 +30,7 @@ class MailBox(models.Model):
     objet_message = models.CharField(max_length=50)
     date = models.DateTimeField(default=timezone.now, 
                                 verbose_name="Date de parution")
+    message_lu = models.BooleanField(default=False)
     def __str__(self):
         return "De {0} à {1}".format(self.expediteur.username, self.destinataire.username)
 

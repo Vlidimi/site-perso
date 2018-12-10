@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from datetime import datetime 
 from django.forms import widgets
 from django.template.defaultfilters import slugify
+from django.db.models import Q
+
 
 
 class UserForm(UserCreationForm):
@@ -19,7 +21,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('prenom', 'nom',  'avatar', 'birth_date', 'pseudo', 'signature')
+        fields = ('pseudo', 'avatar', 'prenom', 'nom', 'birth_date', 'signature')
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
@@ -27,7 +29,7 @@ class ProfileForm(forms.ModelForm):
             if (datetime.now().year - birth_date.year)<6: 
                 raise forms.ValidationError("Dis donc petit malin, tu bouches le bouchon un peu trop loin !")
             if (datetime.now().year - birth_date.year)>100:
-                raise forms.ValidationError("Sans vouloir manquer de respect à votre ancienneté, j'ai comme l'impression que vous êtes entrain de m'entuber !")
+                raise forms.ValidatizonError("Sans vouloir manquer de respect à votre ancienneté, j'ai comme l'impression que vous êtes entrain de m'entuber !")
 
         return birth_date
     def clean_pseudo(self):
@@ -59,7 +61,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('pseudo', 'prenom', 'nom',  'avatar', 'birth_date',  'signature', 'bio')
+        fields = ('pseudo', 'avatar', 'prenom', 'nom', 'birth_date', 'signature', 'bio')
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
@@ -75,7 +77,7 @@ class ProfileUpdateForm(forms.ModelForm):
         pseudo = self.cleaned_data['pseudo']
         if pseudo == 'JaiPasEncoreChoisiDePseudoCestPasBien':
             raise forms.ValidationError("Il faut choisir un peuso c'est important !")
-        if Profile.objects.filter(slug_pseudo__iexact=slugify(pseudo)).exists():
+        if Profile.objects.filter(Q(slug_pseudo__iexact=slugify(pseudo)) & ~Q(id__iexact=self.profile.id)).exists():
             raise forms.ValidationError("Désolé mais ce pseudo est déjà pris")
         if self.profile.user.username == pseudo:
             raise forms.ValidationError("Il vaut mieux que le nom d'utilisateur et le pseudo soient différents. Si vous tenez tant que ça à ce qu'ils soient identique, il n'est pas bien compliqué de faire sauter cette sécurité ;p")

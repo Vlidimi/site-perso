@@ -4,27 +4,42 @@
 {% block content %}
 	<div class="wrapper">
 		{% if user.is_authenticated %}
-		<h1 style="position: sticky;"> Bienvenu {{ user.username }} ! </h1>
+		<h1 style="position: sticky;"> Bonjour {{ user.username }} :) 
+		<br> Et bienvenu sur L'Excentrique ! </h1>
 		{% else %}
-		<h1> Bienvenu jeune inconnu(e) ! </h1>
+		<h1> Bonjour jeune inconnu(e) :)
+		<br> Et bienvenu sur L'Excentrique !</h1>
 		{% endif %}
+		<br>
+	</div>
+	<div class="container_home">
+		<div class="droite">
+			<h2 align="left"> Derniers Ajouts</h2>
+			<h3> Livres : </h3>
+			<p align="left"> {% for last in last_posts %}
+				<li> <a href="{% url 'blog_livreSF:show' last.pk last.slug %}"> {{ last.titre }} </a></li>
+				{% endfor %}
+			</p>
+		</div>
+		<div class="gauche">
+			{% if user.is_authenticated %}
+			{% else %}
+				<p> &nbsp; &nbsp; &nbsp; La première chose à savoir c'est que l'excentrique est un site participatif (ça c'est en théorie, l'avenir dira s'il ne sera pas plutot mono-participatif :3 ), et donc pour profiter de toutes les fonctionalités de ce site, je vous invite à vous <a href="{% url 'connexion:enregistrement' %}"> inscrire </a> ou à vous  <a href="{% url 'connexion:connexion' %}"> connecter </a>   afin que vous puissiez créer un post, commenter, liker, envoyer des messages privés, et bien d'autres ! (enfin pas tellement mais faut bien susciter l'intérêt héhé) </p>
+			{% endif %}
+			<p> &nbsp; &nbsp; &nbsp; Sur ce site, vous pourrez découvrir des <a href="{% url 'blog_livreSF:index' %}" >livres</a> ou nous faire part de vos préférés et faire de même avec des  <a href="{% url 'film:home' %}" >films</a>. <br> 
+			Vous pourrez faire preuve d'inventivité en écrivant une  <a href="{% url 'nouvelle:home' %}">nouvelle</a> ou être parmis les premiers à lire des <a href="{% url 'nouvelle:home' %}">nouvelles</a> inédites sorties tout droit d'esprits les plus féconds !<br>
+			Enfin, si vous êtes plus d'humeur à discuter et réagir sur des sujets divers et variés, alors le <a href="{% url 'forum:home' %}">forum</a> sera fait pour vous.  <br>
+			Comme vous avez pu le constater, tout est accessible directement à partir de la barre de navigation dont je ne vous ferai pas l'affront de vous indiquer :p <br>
+			Et comme vous pourrez le constater, quasiment tous les liens mènent à des pages vides hihi </p>
+			<br>
+			<p>
+				&nbsp; &nbsp; &nbsp; Ce site a été réalisé par mes soins de A-Z, moi qui n'y connaissait rien. Il y aura donc probablement des bugs de ci, de là qui m'auraient échappé ! Donc n'hésitez pas à m'envoyer un <a href="{% url 'connexion:write_a_message_destinataire' pseudo_admin.slug_pseudo %}"> message </a> si vous éprouvez une quelconque difficultée ou si vous avez repéré un bug. Si vous voulez contribuer au développement de ce site en me donnant des conseils sur la présentation, le style, ... ou en me faisant part de vos idées brillantissimes, ne vous gênez pas non plus, ce sera avec plaisir que je lierai vos suggestions :) 
+			</p>
+		</div>
 
-   		
+	</div>
 
-	</div>
-	<div class="gauche">
-		<p>  Vous cherchez un <a href="{% url 'blog_livreSF:index' %}" class="wrapper-link" >livre</a> ? un film ? Ou bien vous voulez découvrir une nouvelle ? Ou enfin vous voulez discuter sur le forum ? </p>
-	</div>
-	<div class="droite">
-		<h2 align="left"> Derniers Ajouts</h2>
-		<h3> Livres : </h3>
-		<p align="left"> {% for last in last_posts %}
-			<li> <a href="{% url 'blog_livreSF:show' last.pk last.slug %}"> {{ last.titre }} </a></li>
-			{% endfor %}
-		</p>
-	</div>
- 	{% include 'layouts/_derniereactu.html' %} 
-{% endblock %}
+ {% endblock %}
 
 
 
