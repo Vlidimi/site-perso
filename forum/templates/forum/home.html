@@ -1,0 +1,7 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Forum{% endblock %}
+
+{% block content %} 
+<p> Une éventualité pas encore concrétisée qui n'est pas une priorité. <br> Si cela revêt d'un intérêt particulier pour vous, faites m'en part en m'envoyant un <a href="{% url 'connexion:write_a_message_destinataire' pseudo_admin.slug_pseudo %}"> message </a>  <div style="font-style: italic">Signé: l'administrateur aka le grand, l'unique et l'inégalable {{ pseudo_admin.pseudo }} </div></p> 
+{% endblock %}
