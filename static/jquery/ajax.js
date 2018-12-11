@@ -163,6 +163,14 @@ $(function(){
 	});
 });
 
+$(document).ready(function(){
+	$("div>a[href]").click(function(){
+		var this_ = $(this);
+		var url = this_.attr('href');
+		console.log("coucou",url);
+	});
+});
+
 
 
 

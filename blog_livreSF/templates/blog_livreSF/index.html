@@ -8,7 +8,7 @@
 <div class="card" style="z-index: 1;right: 0; position: fixed; width: 20%;" >
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title"> Recherche par auteur ou par titre</h5>
+        <h5 class="card-title adaptative-lenght-title"> Recherche par auteur ou par titre</h5>
         <p> {% csrf_token %} <input type="text" name="search" id="search" style="width: 100%">
                 <ul id="search-results">
                     
@@ -18,7 +18,7 @@
     </div>
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title"> Recherche par genre littéraire</h5>
+        <h5 class="card-title adaptative-lenght-title"> Recherche par genre littéraire</h5>
         <p> <form action="" method="get">
                 {% csrf_token %}
                 <input list="genre_litteraire" name="genre" style="width: 100%">
@@ -28,7 +28,7 @@
                     <option value="{{ genre.genre_litteraire }}">
                     {% endfor %}
                 </datalist>
-                <input type="submit">
+                <input class="adaptative-lenght-normal" type="submit">
             </form>
 
     </div>
@@ -36,9 +36,9 @@
 
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title"> Divers</h5>
-        <a href="{% url 'blog_livreSF:index' %}"> Retour à l'index général</a> <br>
-        <a href="{% url 'blog_livreSF:write_a_blog' %}"> Ecrire un article</a>
+        <h5 class="card-title adaptative-lenght-title"> Divers</h5>
+        <a class="adaptative-lenght-normal" href="{% url 'blog_livreSF:index' %}"> Retour à l'index général</a> <br>
+        <a class="adaptative-lenght-normal" href="{% url 'blog_livreSF:write_a_blog' %}"> Ecrire un article</a>
 
     </div>
     </div>

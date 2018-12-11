@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import markdown
+# import markdown
 from connexion.models import Profile
 # Create your views here.
 

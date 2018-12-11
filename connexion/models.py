@@ -36,3 +36,4 @@ class MailBox(models.Model):
 
     class Meta:
         ordering = ['-date'] #Ordonne par rapport à la date
+
