@@ -39,19 +39,22 @@ body {
 	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
 	background-color: #fefefe;
 	padding-top: 65px;
+	background-image: url(/media/image_site/fonddecran3.jpg); 
+	background-size: cover;
+	
 
 }
 
+.nuage {
+	background-image: url(/media/image_site/fonddecran3.jpg); 
+	background-size: cover;
+}
 
 
 #navbar {
 	border-radius: 10px;
-/*	background: -webkit-linear-gradient(top, #64635C  0%,#8C8A80 40%,#B7B5A8 100%);
-*/	background-color: #10C7B5;
-/*	background-color:  #000;
-	background: -webkit-linear-gradient(top,  #87e0fd 0%,#53cbf1 40%,#05abe0 100%);
-	border-top: 4px solid #1ce;
-*/	top: 0;
+	background: -webkit-linear-gradient(top, #0084E9  0%,#2D99EC 40%,#5EB0EF 100%);
+	top: 0;
 	position: fixed;
 	width: 100%;
 	z-index: 1; 
@@ -99,6 +102,7 @@ body {
 }
 
 
+
 #navbar .navbar-right li{
 	display: inline-block;
 	list-style: none;
@@ -110,16 +114,10 @@ body {
 	
 }
 
-#navbar .navbar-right a:focus{
-	background: #565537;
-	width: 200px;
 
-}
-
-div #entourer {
-/*	background:#EDE501;
-*/	background: -webkit-linear-gradient(
-		top, #ECE400  0%,#E6DF13 40%,#E9E458 100%);
+div #entourer_blog_livre_SF {
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
 	border-radius:20%;
 	width: 60px;
 	height: 30px;
@@ -127,12 +125,78 @@ div #entourer {
 	left: -10px;
 	position: absolute; 
 	z-index: -1; 
+	display: none;
+}
+
+div #entourer_film {
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
+	border-radius:20%;
+	width: 60px;
+	height: 30px;
+	bottom: -5px;
+	left: -10px;
+	position: absolute; 
+	z-index: -1; 
+	display: none;
+}
+
+div #entourer_nouvelle {
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
+	border-radius:20%;
+	width: 88px;
+	height: 30px;
+	bottom: -5px;
+	left: -10px;
+	position: absolute; 
+	z-index: -1; 
+	display: none;
+}
+
+div #entourer_forum {
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
+	border-radius:20%;
+	width: 65px;
+	height: 30px;
+	bottom: -5px;
+	left: -10px;
+	position: absolute; 
+	z-index: -1; 
+	display: none;
+}
+
+div #entourer_profile {
+
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
+	border-radius:30%;
+	width: 120px;
+	height: 30px;
+	bottom: -5px;
+	left: -10px;
+	position: absolute; 
+	z-index: -2; 
+	display: none;
+}
+
+div #entourer_connexion {
+	background: -webkit-linear-gradient(
+		top, #ECE400  0%,#F2C100 40%,#F29900 100%);
+	border-radius:20%;
+	width: 88px;
+	height: 30px;
+	bottom: -5px;
+	left: -10px;
+	position: absolute; 
+	z-index: -1; 
+	display: none;
 }
 
 #navbar .navbar-right a{
 	text-decoration: none;
-	color: #000;
-	
+	color: #000;	
 
 }
 #navbar .navbar-right a:hover{
@@ -209,7 +273,7 @@ div #entourer {
 }
 
 div #cercle {
-	background:#1ce;
+	background:#F32020;
 	border-radius:50%;
 	width:20px;
 	height:20px;

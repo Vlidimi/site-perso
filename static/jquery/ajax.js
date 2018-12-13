@@ -164,12 +164,45 @@ $(function(){
 });
 
 $(document).ready(function(){
-	$("div>a[href]").click(function(){
-		var this_ = $(this);
-		var url = this_.attr('href');
-		console.log("coucou",url);
-	});
+
+	var pathname = window.location.pathname ;
+	// var pathname = pathname.slice(1).slice(0,-1)
+	// var selector = "a[href*='" + pathname +"']"
+	// var selector_hover = selector + ":hover"
+	if( pathname.indexOf('nouvelle') > -1){
+		$('#entourer_nouvelle').css('display', 'inline')
+	}
+	if( pathname.indexOf('film') > -1){
+		$('#entourer_film').css('display', 'inline')
+	}
+	if( pathname.indexOf('profile') > -1){
+		$('#entourer_profile').css('display', 'inline')
+	}
+	if( pathname.indexOf('blog_livreSF') > -1){
+		$('#entourer_blog_livre_SF').css('display', 'inline')
+	}
+	if( pathname.indexOf('forum') > -1){
+		$('#entourer_forum').css('display', 'inline')
+	}
+	console.log(pathname)
+	if( pathname.indexOf('connexion') > -1){
+		console.log("oui")
+		$('#entourer_connexion').css('display', 'inline')
+		// $('#navbar .navbar-right a[href*="connexion"]:hover').css('color','#000')
+	}
+
 });
+
+$(function(){
+	$.ajax({
+		type: "GET",
+		url: "/connexion/ajax/message_non_lu/",
+
+		success: function(data, textStatus, jqXHR){
+			$('#nombre_message_non_lu').html(data);
+		}
+	})
+})
 
 
 

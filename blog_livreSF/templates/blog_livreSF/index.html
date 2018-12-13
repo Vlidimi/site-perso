@@ -5,7 +5,7 @@
 {% block content %} 
 
 <br>
-<div class="card" style="z-index: 1;right: 0; position: fixed; width: 20%;" >
+<div class="card border-dark " style="z-index: 1;right: 0; position: fixed; width: 20%;" >
     <div class="card">
     <div class="card-body">
         <h5 class="card-title adaptative-lenght-title"> Recherche par auteur ou par titre</h5>
@@ -16,7 +16,7 @@
         </p>
     </div>
     </div>
-    <div class="card">
+    <div class="card ">
     <div class="card-body">
         <h5 class="card-title adaptative-lenght-title"> Recherche par genre littéraire</h5>
         <p> <form action="" method="get">
@@ -34,7 +34,7 @@
     </div>
     </div>
 
-    <div class="card">
+    <div class="card  ">
     <div class="card-body">
         <h5 class="card-title adaptative-lenght-title"> Divers</h5>
         <a class="adaptative-lenght-normal" href="{% url 'blog_livreSF:index' %}"> Retour à l'index général</a> <br>
@@ -49,7 +49,7 @@
     <!-- <div class="container float-left"> -->
         <div class="container" style="left: 0;position: relative;" >
             <div class="card-group row " style="width: 85%; ">
-                <div class="card col-md-3">
+                <div class="card border-dark col-md-3">
                     <img class="card-img-top" src="{{ MEDIA_URL }}{{ article.auteur_blog.profile.avatar }}" alt="Card image cap">
                     <div class="card-body text-center">
                     <h5 class="card-title"><a href="{% url 'connexion:profile-other-user' article.auteur_blog.profile.slug_pseudo %}">{{ article.auteur_blog.profile.pseudo }}</a> <br> <p style="font-size: small; font-style:italic ;">{{ article.auteur_blog.profile.rang }}</p ></h5>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card border-dark">
                 {% if article.photo != '' %}
                        <!--  <div class="row"> -->
                             <div class="card-md-8">

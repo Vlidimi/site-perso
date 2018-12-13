@@ -2,17 +2,17 @@
 	<div class="wrapper">
 		<a href="{% url 'home' %}" class="navbar-brand">L'Excentrique</a>
 		<ul class="navbar-right">
-			<li> <a href="{% url 'blog_livreSF:index' %}">Livres</a> <div id="entourer"></div> </li>
-			<li>  <a href="{% url 'film:home' %}">Films</a> </li>
-			<li> <a href="{% url 'nouvelle:home' %}">Nouvelles</a>  </li>
-			<li>  <a href="{% url 'forum:home' %}">Forum </a> </li>			
+			<li> <a href="{% url 'blog_livreSF:index' %}" >Livres</a> <div id="entourer_blog_livre_SF"></div> </li>
+			<li>  <a href="{% url 'film:home' %}" >Films</a> <div id="entourer_film"></div></li>
+			<li> <a href="{% url 'nouvelle:home' %}" >Nouvelles</a> <div id="entourer_nouvelle"></div> </li>
+			<li>  <a href="{% url 'forum:home' %}" >Forum </a><div id="entourer_forum"></div> </li>			
 			{% if user.is_authenticated %}
-			<li> <a href="{% url 'connexion:profile' %}"> Voir son profil </a> <div id="cercle"></div> <div id="nombre_message_non_lu"></div> </li>
+			<li> <a href="{% url 'connexion:profile' %}" > Voir son profil </a> <div id="cercle"></div> <div id="nombre_message_non_lu"></div><div id="entourer_profile"></div> </li>
 			<li> <a href="{% url 'connexion:deconnexion' %}"> Se déconnecter</a></li>
 			<strong> Coucou {{ user.username }} </strong>
 
 			{% else %}
-			<li> <a href="{% url 'connexion:connexion' %}"> Connexion</a></li>
+			<li> <a href="{% url 'connexion:connexion' %}"> Connexion</a> <div id="entourer_connexion"></div></li>
 			{% endif %}
 			
 

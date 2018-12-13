@@ -19,27 +19,9 @@
 	<body>
 		<main>
 			{% include 'layouts/_nav.html' %}
-			{% if messages %}
-			  <ul class="messages">
-			    {% for message in messages %}
-<!-- 			      <div class="alert alert-{{ message.tags }}">{{ message }}</div> -->
-					<div class="alert {{ message.tags }} alert-dismissible" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						{{ message }}
-					</div>
-			    {% endfor %}
-			  </ul>
-			{% endif %}
-<!-- 			{% if messages %}
-			<ul class="messages">
-			    {% for message in messages %}
-			    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-			    {% endfor %}
-			</ul>
-			{% endif %} -->	
-			<div class=margin> 
+			{% include 'layouts/_message.html' %}
+
+			<div class="margin"> 
 				{% block content %}{% endblock %}
 			</div>
 
@@ -56,18 +38,7 @@
 				{% block jquery %}{% endblock %}
 			})
 		</script>
-		<script>
-			$(function(){
-				$.ajax({
-					type: "GET",
-					url: "/connexion/ajax/message_non_lu/",
 
-					success: function(data, textStatus, jqXHR){
-						$('#nombre_message_non_lu').html(data);
-					}
-				})
-			})
-		</script>
-		{% block javascript %}{% endblock %}
 	</body>
+
 </html>

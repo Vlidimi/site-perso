@@ -1,6 +1,6 @@
 from django import forms
 from .models import Article, CommentSection, Genre
-# import markdown
+import markdown
 
 class ArticleForm(forms.ModelForm):
 	
