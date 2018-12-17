@@ -52,12 +52,8 @@ def enregistrement(request):
 			#Ici la problématique était de créer un profil qui correspondait
 			#à un User renseigné sur la même page
 			user = form.save() #Première étape, sauvegarder utilisateur 
-			#Dans le fichier signal.py est crée un Profil correspondant à ce user
-			userprofile = Profile.objects.get(user=user) #On va le chercher
-			for field in profile_form.fields.keys(): #On remplit le profil avec les infos renseignées dans le formulaire
-				test = 'userprofile.'+ field
-				globals()[test] = profile_form.cleaned_data[field]
-
+			userprofile = profile_form.save(commit=False) #On sauvegarde le profile SANS L ENVOYER A LA DATABASE (car il n'a pas encore d'utilisateur associé !)
+			userprofile.user = user # On renseigne l'utilisateur associé et maintenant on peut sauvegarder 
 			userprofile.save()
 			login(request, user)
 			messages.success(request, 'Votre compte a bien été crée. Bienvenu :)')
