@@ -1,7 +1,7 @@
 from django import forms
 from .models import Article, CommentSection, Genre
 import markdown
-
+from connexion.models import User
 class ArticleForm(forms.ModelForm):
 	
 
@@ -39,10 +39,12 @@ class ArticleForm(forms.ModelForm):
         return cleaned_data
 		
 class CommentSectionForm(forms.ModelForm):
-	class Meta:
-		model = CommentSection
-		fields = ('comment',)
-		# exclude = ('auteur_comment','article')
+    class Meta:
+        model = CommentSection
+        fields = ('comment',)
+        
+
+
 
 
 
