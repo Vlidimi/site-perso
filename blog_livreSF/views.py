@@ -248,7 +248,7 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
 		post = self.get_object()
-		if self.request.user.username == post.auteur_comment or self.request.user.is_superuser == True:
+		if self.request.user.username == post.auteur_comment.username or self.request.user.is_superuser == True:
 			return True
 		else:
 			return False
