@@ -113,99 +113,53 @@
 {% endif %}
 
 
+<br>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
+    <input type="submit" name="laisser_commentaire" value="Envoyer" />
+</form>
 
+<br>
+{% for comment in article.commentsection_set.all %}
 
+	<div class="container " style="left: 0;position: relative;" >
+        <div class="card-group row " style="width: 100%; ">
+            <div class="card border-right-0 border-dark col-md-1  ">
+                <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
+            </div>
+            <div class="card border border-dark border-left-0">
+            	<h5 class="card-title"> 
+            		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
+            		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
+            		posté le : {{ comment.date }} 
+            		{% if comment.modification %}
+						modifié le : {{ comment.updated_at }}
+					{% endif %}	
+					</div>		
+				</h5>
+				<div class="card-body" id="message_{{ comment.id }}">
 
-{% if modifier %}
-	{% for comment in article.commentsection_set.all %}
-		<br>
-		{% if comment.id != comment_change.id %}
-			<div class="container" style="left: 0;position: relative;" >
-	            <div class="card-group row" style="width: 100%; ">
-	                <div class="card col-md-1 border-0">
-	                    <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
-	                </div>
-	                <div class="card border">
-	                	<h5 class="card-title"> 
-	                		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
-	                		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
-	                		posté le : {{ comment.date }} 
-	                		{% if comment.modification %}
-								modifié le : {{ comment.updated_at }}
-							{% endif %}	
-							</div>		
-						</h5>
-						<div class="card-body">
-							{{ comment.comment }}
-							<br>
-							<br>
-							{% if user.username == comment.auteur_comment or user.is_superuser %}
-								<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
-								<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
-							{% endif %} 
-						</div>
-					</div>
-				</div>
-				
-			</div>
-		{% else %}
-			<form method="post" enctype="multipart/form-data" novalidate>
-				{% csrf_token %}
-				{% include './form_help.html' with form=form %}
-			<input type="submit" value="Modifier" />
-			</form>
-		{% endif %}
-	<br>
-	{% endfor %}
-{% else %}
-	<br>
-	<form method="post" enctype="multipart/form-data" novalidate>
-	    {% csrf_token %}
-	    {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
-	    <input type="submit" value="Envoyer" />
-	</form>
-
-	<br>
-	{% for comment in article.commentsection_set.all %}
-
-		<div class="container " style="left: 0;position: relative;" >
-            <div class="card-group row " style="width: 100%; ">
-                <div class="card border-right-0 border-dark col-md-1  ">
-                    <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
-                </div>
-                <div class="card border border-dark border-left-0">
-                	<h5 class="card-title"> 
-                		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
-                		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
-                		posté le : {{ comment.date }} 
-                		{% if comment.modification %}
-							modifié le : {{ comment.updated_at }}
-						{% endif %}	
-						</div>		
-					</h5>
-					<div class="card-body" id="message_{{ comment.id }}">
-
-						{{ comment.comment }}
-						<br>
-						<br>
-						{% if user == comment.auteur_comment or user.is_superuser %}
-							<a class="btn btn-outline-primary " href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}">Modifier le commentaire</a>
-							<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
-						{% endif %} 
-					</div>
+					{{ comment.comment }}
+					<br>
+					<br>
+					{% if user == comment.auteur_comment or user.is_superuser %}
+						<div class="btn btn-outline-primary comment_button" href="{% url 'blog_livreSF:ajax-modify-comment' %}" id_comment="{{ comment.id }}">Modifier le commentaire</div>
+						<a class="btn btn-outline-danger" href="{% url 'blog_livreSF:comment-delete' article.id article.slug comment.pk %}">Supprimer le commentaire</a>
+					{% endif %} 
 				</div>
 			</div>
-			
 		</div>
+		
+	</div>
 
-	{% endfor %}
+{% endfor %}
 
-{% endif %}
 <br>
 <a href="{% url 'blog_livreSF:index' %}">Retour à l'index </a>
 {% endblock %}
 
-<!-- <div class="btn btn-outline-primary comment_button" href="{% url 'blog_livreSF:comment-update' article.id article.slug comment.pk %}" id_comment="{{ comment.id }}">Modifier le commentaire</div>
+
 <script>
 	{% block jquery %}
 	$('.comment_button').click(function() {
@@ -221,7 +175,6 @@
 			// url: "{% url 'blog_livreSF:ajax-modify-comment' %}",
 			data: {
 				'id_comment': id_comment,
-				'csrfmiddlewaretoken': '{{ csrf_token }}',
 			},
 
 			success: function(data){
@@ -230,4 +183,4 @@
 		})
 	})
 	{% endblock %}
-</script> -->
+</script>

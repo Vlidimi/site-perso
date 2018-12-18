@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
 from connexion.models import Profile
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def index(request):
@@ -20,6 +21,54 @@ def index(request):
 def show(request, id, slug = ''):
 	post = get_object_or_404(Article, pk=id)
 	return render(request, 'blog_livreSF/show.html', {'article': post, 'numero': id})
+
+def show_blog(request, id, slug):
+	post = get_object_or_404(Article, pk=id)
+	
+	if request.method == 'POST' and request.user.is_authenticated and 'laisser_commentaire' in request.POST:
+	 	form = CommentSectionForm(request.POST)
+	 	if form.is_valid():
+	 		commentaire = form.save(commit=False)
+	 		commentaire.auteur_comment = request.user
+	 		commentaire.article = post
+	 		commentaire.save()
+	 		messages.success(request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
+	 		form = CommentSectionForm()
+	 		return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+
+	elif request.method == 'POST' and request.user.is_authenticated :
+		my_dict = dict(request.POST) #Request.POST est un QueryDict que l'on transforme en dict
+		for cle, valeur in my_dict.items(): #On balaie le dictionnaire
+			if valeur == ['Submit']: # Sans que je sache pourquoi le name de l'input dans ajax_modify_comment se retrouve en clé avec pour valeur ['Submit']
+				name = cle           # Etant donné que le nom est composé comme "modifier_commentaire_{{ id_comment }}"
+		type_button = name[:20] 
+		id_comment = int(name[21:])
+		commentaire = get_object_or_404(CommentSection, pk=id_comment)
+		form = CommentSectionForm(request.POST, instance=commentaire)
+		if form.is_valid():
+			commentaire = form.save(commit=False)
+			commentaire.auteur_comment = request.user
+			commentaire.article = post
+			commentaire.save()
+			messages.success(request, "Commentaire modifié ! On ne peut être parfait du premier coup ;) ")
+			form = CommentSectionForm()
+			return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+	else: 
+		form = CommentSectionForm()
+	return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+
+
+
+
+@csrf_exempt
+def modify_comment(request): #Fonctionne avec requete ajax pour modifier un commentaire
+	if request.is_ajax() and request.method == 'POST':
+		id_comment = request.POST.get('id_comment', None) # On extrait l'id du commentaire à modifier
+		commentaire = get_object_or_404(CommentSection, pk=id_comment)
+		form = CommentSectionForm(instance=commentaire) # La form qui sera affichée
+		modifier_commentaire_id = "modifier_commentaire_" + str(id_comment) # Pour le nom que l'on récupèrera avec l'id afin de savoir quel commentaire a été modifié cf show_blog 
+		return render(request, 'blog_livreSF/ajax_modify_comment.html', {'form_comment' : form, 'modifier_commentaire_id': modifier_commentaire_id})
+
 
 def write_a_blog(request):
 
@@ -212,54 +261,8 @@ class PostLikeAPIToggle(APIView):
 
 
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
-	login_url = 'connexion:connexion'
-	model = Article
-	form_class = CommentSectionForm
-	template_name = 'blog_livreSF/show.html'
-
-	def form_valid(self, form): #Permet de fixer des valeurs du modèle
-		form.instance.auteur_comment = User.objects.get(username = self.request.user)
-		form.instance.article = self.get_object()
-		messages.success(self.request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
-		return super().form_valid(form)
-
-	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
-		context = super(CommentCreateView, self).get_context_data(**kwargs)
-		context['article'] = self.get_object()
-		context['modifier'] = False
-		context['resume'] = markdown.markdown(context['article'].resume)
-		context['contenu'] = markdown.markdown(context['article'].contenu)
-		context['posts_len'] =len(context['article'].resume.split()) + len(context['article'].contenu.split())
-
-		return context
-
-class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-	login_url = 'connexion:connexion'
-	model = CommentSection
-	form_class = CommentSectionForm
-	template_name = 'blog_livreSF/show.html'
-	# template_name = 'blog_livreSF/ajax_modify_comment.html'
-
-	def form_valid(self, form): #Permet de fixer des valeurs du modèle
-		form.instance.modification = True
-		messages.success(self.request, "Commentaire modifié ! On ne peut être parfait du premier coup ;) ")
-		return super().form_valid(form)
-
-	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
-		post = self.get_object()
-		if self.request.user.username == post.auteur_comment.username or self.request.user.is_superuser == True:
-			return True
-		else:
-			return False
 
 
-	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
-		context = super(CommentUpdateView, self).get_context_data(**kwargs)
-		context['article'] = self.get_object().article
-		context['comment_change'] = self.get_object()
-		context['modifier'] = True
-		return context
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -277,11 +280,90 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
-def modify_comment(request):
-	if request.is_ajax() and request.method == 'POST':
-		id_comment = request.GET.get('id_comment', None)
-		form = CommentSectionForm(request.POST)
-		print( id_comment)
-		return render(request, 'blog_livreSF/ajax_modify_comment.html', {'form' : form})
-	elif request.method == 'POST':
-		print("coucou")
+
+
+# Désuet : 
+#Poster un commentaire et afficher l'article
+# class CommentCreateView(LoginRequiredMixin, CreateView):
+# 	login_url = 'connexion:connexion'
+# 	model = Article
+# 	form_class = CommentSectionForm
+# 	template_name = 'blog_livreSF/show.html'
+
+# 	def form_valid(self, form): #Permet de fixer des valeurs du modèle
+# 		form.instance.auteur_comment = User.objects.get(username = self.request.user)
+# 		form.instance.article = self.get_object()
+# 		messages.success(self.request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
+# 		return super().form_valid(form)
+
+# 	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
+# 		context = super(CommentCreateView, self).get_context_data(**kwargs)
+# 		context['article'] = self.get_object()
+# 		context['modifier'] = False
+# 		context['resume'] = markdown.markdown(context['article'].resume)
+# 		context['contenu'] = markdown.markdown(context['article'].contenu)
+# 		context['posts_len'] =len(context['article'].resume.split()) + len(context['article'].contenu.split())
+
+# 		return context
+
+# 	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
+# 		post = self.get_object()
+# 		if self.request.user.username == post.auteur_comment.username or self.request.user.is_superuser == True:
+# 			return True
+# 		else:
+# 			return False
+
+
+# 	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
+# 		context = super(CommentUpdateView, self).get_context_data(**kwargs)
+# 		context['article'] = self.get_object().article
+# 		context['comment_change'] = self.get_object()
+# 		context['modifier'] = True
+# 		return context
+#Modifier un commentaire : fonction based view
+# def show_blog_change_comment(request, id_article, id_comment, slug=''):
+# 	post = get_object_or_404(Article, pk=id_article)
+# 	comment = get_object_or_404(CommentSection, pk=id_comment)
+# 	if request.method == 'POST' and request.user.is_authenticated:
+# 	 	form = CommentSectionForm(request.POST, instance=comment)
+# 	 	print(form, comment)
+# 	 	if form.is_valid():
+# 	 		print("hello")
+# 	 		commentaire = form.save(commit=False)
+# 	 		commentaire.auteur_comment = request.user
+# 	 		commentaire.article = post
+# 	 		commentaire.save()
+# 	 		messages.success(request, "Commentaire modifié ! Merci d'avoir pris le temps de partager votre avis :)")
+# 	 		form = CommentSectionForm()
+# 	 		return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+# 	else: 
+# 		form = CommentSectionForm(instance=comment)
+# 		print(form, comment)
+# 	return render(request, 'blog_livreSF/modify_blog_bis.html', {'form':form, 'article': post})
+
+# #Modifier un commentaire : class based view
+# class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+# 	login_url = 'connexion:connexion'
+# 	model = CommentSection
+# 	form_class = CommentSectionForm
+# 	template_name = 'blog_livreSF/show.html'
+
+# 	def form_valid(self, form): #Permet de fixer des valeurs du modèle
+# 		form.instance.modification = True
+# 		messages.success(self.request, "Commentaire modifié ! On ne peut être parfait du premier coup ;) ")
+# 		return super().form_valid(form)
+
+# 	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
+# 		post = self.get_object()
+# 		if self.request.user.username == post.auteur_comment or self.request.user.is_superuser == True:
+# 			return True
+# 		else:
+# 			return False
+
+
+# 	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
+# 		context = super(CommentUpdateView, self).get_context_data(**kwargs)
+# 		context['article'] = self.get_object().article
+# 		context['comment_change'] = self.get_object()
+# 		context['modifier'] = True
+# 		return context
