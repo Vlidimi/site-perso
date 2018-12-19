@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
 
+    'markdown_deux',
+
     'widget_tweaks',
     'blog_livreSF',
     'connexion',

@@ -7,7 +7,6 @@ from django.template.defaultfilters import slugify
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
-from django.core.files.images import get_image_dimensions
 
 class Genre(models.Model):
     genre_litteraire = models.CharField(max_length=30)
@@ -97,6 +96,36 @@ class CommentSection(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     comment = models.TextField()
     modification = models.BooleanField(default=False)
+    number_words = models.IntegerField(default=0)
+    nombre_mots_afficher = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        print(str(self.comment).split(), list(self.comment))
+        self.number_words = len(str(self.comment).split()) + 10*list(self.comment).count('\n')
+        print(self.number_words)
+        #Traite le cas des longs commentaires avec une option "Lire la suite"
+        #Traitement spécifique aux commentaires avec beaucoup de saut de ligne
+        #On définit ici une limite de 100 mots visible par commentaire
+        #Un saut de ligne correspond à 10 mots
+        indice = 0
+        nombre_mots_afficher = 0
+        liste = list(str(self.comment))
+        limite_mot = 100 #Nombre de mots max par commentaire à afficher avant un "Lire plus"
+        if liste[0] != ' ' and liste[0] != '\n' and liste[0] != '\r':
+            nombre_mots_afficher = 1
+        
+        while indice < len(liste)-1:
+            indice += 1
+            if liste[indice-1] == ' ' or liste[indice-1] == '\n' or liste[indice-1] == '\r':
+                if liste[indice] != ' ' and liste[indice] != '\n' and liste[indice] != '\r':
+                    nombre_mots_afficher += 1
+                    limite_mot = limite_mot-1
+            if liste[indice] == '\n':
+                limite_mot = limite_mot - 10
+            if limite_mot <= 0:
+                break
+        self.nombre_mots_afficher = nombre_mots_afficher
+        super(CommentSection, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('blog_livreSF:show', kwargs={'id':self.article.id, 'slug':self.article.slug})

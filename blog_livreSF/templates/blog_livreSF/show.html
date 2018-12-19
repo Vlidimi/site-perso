@@ -1,9 +1,10 @@
 {% extends 'layouts/base.html' %}
+{% load markdown_deux_tags %}
 {% block title %}{{ article.titre }}{% endblock %}
 {% block content %}
 
 
-<div class="card  text-center border-0 " >
+<div class="card  text-center border-0 nuage" >
 	<div class="card-body">
 		
 		<blockquote class="blockquote mb-0">	
@@ -18,7 +19,9 @@
 				<br>
 				Régigé par {{ article.auteur_blog.profile.pseudo }}
 				<cite style="margin-left: 20px;">
-					{{ posts_len }} mots
+					{% if nombre_mots <= 1 %} {{ nombre_mots }} mot
+					{% else %} {{ nombre_mots }} mots
+					{% endif %}
 				</cite> 
 				<cite style="margin-left: 20px;font-style: normal;" >
 					<a class='like-btn' data-href="{{ article.get_like_api_url }}" href="{{ article.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ article.slug }}">
@@ -32,10 +35,12 @@
 					<img id="{{ article.slug }}" style="height:25px;margin-bottom: 7px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png">
 				</cite>
 				<cite style="margin-left: 20px;">
-					{{ article.commentsection_set.count }} commentaires
+					{% if article.commentsection_set.count <= 1 %} {{ article.commentsection_set.count }} commentaire
+					{% else %} {{ article.commentsection_set.count }} commentaires
+					{% endif %}
 				</cite> 
 				<cite style="margin-left: 20px;">
-					{{ article.date|date:"DATE_FORMAT" }}
+					écrit le {{ article.date|date:"DATE_FORMAT" }}
 				</cite>
 				<cite style="margin-left: 20px;">
 					{% if article.modification %}
@@ -50,11 +55,11 @@
 </div>
 <div class="card text-center border-0 nuage" >
 	<div class="card-body">
-		{% if resume != '' %}
+		{% if article.resume != '' %}
 			<p> 
 				<h2> Résumé : </h2>
 				<br>
-				{{ resume|safe|linebreaks }}
+				{{ article.resume|markdown }}
 			</p>
 		{% endif %}
 		<br>
@@ -65,11 +70,11 @@
 			</p>
 		{% endif %}
 		<br>
-		{% if contenu != '' %}
+		{% if article.contenu != '' %}
 			<p>
 				<h2>Contenu :</h2> 
 				<br> 
-				{{ contenu|safe|linebreaks }}
+				{{ article.contenu|markdown }}
 			</p>
 		{% endif %}
 		<br>
@@ -81,7 +86,7 @@
 		{% endif %}
 		<br>
 		{% if article.auteur_blog.profile.signature %}
-			<p style="font-style:italic">{{ article.auteur_blog.profile.signature }}</p>
+			<p class="signature">{{ article.auteur_blog.profile.signature }}</p>
 		{% endif %}
 	</div>
 
@@ -100,6 +105,10 @@
 		<img id="{{ article.slug }}" style="height:25px;margin-bottom: 7px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png">
 		<br>
 		<div style="margin-top: -23px;">Or leave a comment !</div>  
+		{% if user.is_authenticated == False %}
+			<br>
+			<div>Mais pour pouvoir faire tout ça, il faut vous enregistrer et c'est pas bien compliqué, car ça se passe juste <a href="{% url 'connexion:connexion' %}">là</a></div>  
+		{% endif %}
 	</p>
 	<p>
 		
@@ -112,13 +121,14 @@
 	<br>
 {% endif %}
 
-
+{% if user.is_authenticated %}
 <br>
 <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
     <input type="submit" name="laisser_commentaire" value="Envoyer" />
 </form>
+{% endif %}
 
 <br>
 {% for comment in article.commentsection_set.all %}
@@ -139,9 +149,22 @@
 					</div>		
 				</h5>
 				<div class="card-body" id="message_{{ comment.id }}">
-
-					{{ comment.comment }}
+					{% if comment.number_words <= 100 %}
+						{{ comment.comment|markdown }}
+					{% else %}
+						<div id="show_short_comment_{{ comment.pk }}"  style="display: inline;">
+							{{ comment.comment|markdown|truncatewords:comment.nombre_mots_afficher }}
+							<div id="button_more_comment" id_comment = "{{ comment.pk }}" style="font-weight:bold"> Lire la suite </div>
+						</div>
+						<div id="show_long_comment_{{ comment.pk }}"  style="display: none;">
+							{{ comment.comment|markdown }}
+							<div id="button_less_comment" id_comment = "{{ comment.pk }}" style="font-weight:bold"> Moins </div>
+						</div>
+					{% endif %}
 					<br>
+					{% if comment.auteur_comment.profile.signature != '' %}
+					<div class="signature"> {{ comment.auteur_comment.profile.signature }}</div>
+					{% endif %}
 					<br>
 					{% if user == comment.auteur_comment or user.is_superuser %}
 						<div class="btn btn-outline-primary comment_button" href="{% url 'blog_livreSF:ajax-modify-comment' %}" id_comment="{{ comment.id }}">Modifier le commentaire</div>
@@ -159,28 +182,3 @@
 <a href="{% url 'blog_livreSF:index' %}">Retour à l'index </a>
 {% endblock %}
 
-
-<script>
-	{% block jquery %}
-	$('.comment_button').click(function() {
-		var this_ = $(this);
-		var id_comment = this_.attr("id_comment");
-		var href_url = this_.attr("href");
-		var message_id_comment = "#message_"+id_comment
-		console.log(message_id_comment)
-		$.ajax({
-			type: "POST",
-			url: href_url,
-			
-			// url: "{% url 'blog_livreSF:ajax-modify-comment' %}",
-			data: {
-				'id_comment': id_comment,
-			},
-
-			success: function(data){
-				$(message_id_comment).html(data)
-			}
-		})
-	})
-	{% endblock %}
-</script>

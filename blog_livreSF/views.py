@@ -12,6 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
 from connexion.models import Profile
 from django.views.decorators.csrf import csrf_exempt
+import datetime
 # Create your views here.
 
 def index(request):
@@ -24,7 +25,7 @@ def show(request, id, slug = ''):
 
 def show_blog(request, id, slug):
 	post = get_object_or_404(Article, pk=id)
-	
+	nombre_mots = len(post.resume.split()) + len(post.contenu.split())
 	if request.method == 'POST' and request.user.is_authenticated and 'laisser_commentaire' in request.POST:
 	 	form = CommentSectionForm(request.POST)
 	 	if form.is_valid():
@@ -34,7 +35,7 @@ def show_blog(request, id, slug):
 	 		commentaire.save()
 	 		messages.success(request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
 	 		form = CommentSectionForm()
-	 		return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+	 		return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form, 'nombre_mots':nombre_mots})
 
 	elif request.method == 'POST' and request.user.is_authenticated :
 		my_dict = dict(request.POST) #Request.POST est un QueryDict que l'on transforme en dict
@@ -47,15 +48,17 @@ def show_blog(request, id, slug):
 		form = CommentSectionForm(request.POST, instance=commentaire)
 		if form.is_valid():
 			commentaire = form.save(commit=False)
+			commentaire.modification = True
+			commentaire.updated_at = datetime.datetime.now()
 			commentaire.auteur_comment = request.user
 			commentaire.article = post
 			commentaire.save()
 			messages.success(request, "Commentaire modifié ! On ne peut être parfait du premier coup ;) ")
 			form = CommentSectionForm()
-			return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+			return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form, 'nombre_mots':nombre_mots})
 	else: 
 		form = CommentSectionForm()
-	return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form})
+	return render(request, 'blog_livreSF/show.html', {'article':post, 'form':form, 'nombre_mots':nombre_mots})
 
 
 
@@ -142,20 +145,6 @@ class PostListView(ListView):
 			post.word_count =len(post.resume.split()) + len(post.contenu.split())
 		return context
 	# ordering = ['-date']
-
-class PostDetailView(DetailView):
-	model = Article
-	template_name = 'blog_livreSF/show_noregister.html'
-	context_object_name = 'article'
-
-	def get_context_data(self, **kwargs): #Permet d'ajouter d'autres données ex : autre modèle
-		context = super(PostDetailView, self).get_context_data(**kwargs)
-		context['article'] = self.get_object()
-		context['resume'] = markdown.markdown(context['article'].resume)
-		context['contenu'] = markdown.markdown(context['article'].contenu)
-		context['posts_len'] =len(context['article'].resume.split()) + len(context['article'].contenu.split())
-
-		return context
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):

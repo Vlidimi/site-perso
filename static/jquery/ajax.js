@@ -91,7 +91,7 @@ $(function(){
 
 });
 
-
+// Requete ajax pour le bouton like
 $(function(){
 	$('#button_sub').click(function(){
 		var this_ = $(this);
@@ -112,6 +112,7 @@ $(function(){
 	});
 });
 
+// En cas de suppression d'un message ou d'un blog :
 $(function(){
 	$('#tenta1').click(function(){
 		$('#tenta1').hide();
@@ -163,6 +164,7 @@ $(function(){
 	});
 });
 
+// Pour savoir à quel onglet on se trouve :
 $(document).ready(function(){
 
 	var pathname = window.location.pathname ;
@@ -204,6 +206,48 @@ $(function(){
 	})
 })
 
+// Partie commentaire pour voir plus ou moins :
+$(document).ready(function(){
+	$('.comment_button').click(function() {
+		var this_ = $(this);
+		var id_comment = this_.attr("id_comment");
+		var href_url = this_.attr("href");
+		var message_id_comment = "#message_"+id_comment
+		console.log(message_id_comment)
+		$.ajax({
+			type: "POST",
+			url: href_url,
+			data: {
+				'id_comment': id_comment,
+			},
+
+			success: function(data){
+				$(message_id_comment).html(data)
+			}
+		})
+	})
+
+	$("div[id='button_more_comment'").click(function(){
+		var this_ = $(this);
+		var id_comment = this_.attr("id_comment")
+		var id_long = "#show_long_comment_" + id_comment
+		var id_short = "#show_short_comment_" + id_comment
+		console.log(id_comment, id_long, id_short)
+		$(id_long).css("display", "inline")
+		$(id_short).css("display", "none")
+
+	})
+
+	$("div[id='button_less_comment'").click(function(){
+		var this_ = $(this);
+		var id_comment = this_.attr("id_comment")
+		var id_long = "#show_long_comment_" + id_comment
+		var id_short = "#show_short_comment_" + id_comment
+		$(id_long).css("display", "none")
+		$(id_short).css("display", "inline")
+
+	})
+})
 
 
 

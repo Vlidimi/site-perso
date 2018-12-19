@@ -6,7 +6,6 @@ from django.template.defaultfilters import slugify
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
-from django.core.files.images import get_image_dimensions
 
 
 
