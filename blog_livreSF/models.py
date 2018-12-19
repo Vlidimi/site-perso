@@ -4,6 +4,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.images import get_image_dimensions
 
 class Genre(models.Model):
     genre_litteraire = models.CharField(max_length=30)
@@ -60,7 +64,7 @@ class Article(models.Model):
                 content=ContentFile(new_image_io.getvalue()),
                 save=False
             )
-        super(Profile, self).save(*args, **kwargs) 
+        super(Article, self).save(*args, **kwargs) 
 
     
     class Meta:
