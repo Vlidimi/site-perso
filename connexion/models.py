@@ -25,6 +25,11 @@ class Profile(models.Model):
         return "Profil de {0}".format(self.user.username)
 
     def save(self, *args, **kwargs):
+        try:
+            this = Profile.objects.get(id=self.id) #Récupère l'image actuelle
+            if this.avatar != self.avatar and 'nobody.png' not in this.avatar: 
+                this.avatar.delete(save=False) #Supprime l'image actuelle pour faire place à la nouvelle
+        except: pass
         self.slug_pseudo= slugify(self.pseudo) #Permet de générer un slug à partir d'une chaine de caractères
         if 'nobody.png' not in self.avatar.url: # Evite le cas où l'image est celle par défaut
             img = Image.open(self.avatar) # Pour changer la dimension d'une image enregistrée pour ne pas qu'elle prenne trop de place dans la bdd

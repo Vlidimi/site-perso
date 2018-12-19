@@ -41,6 +41,11 @@ class Article(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug= slugify(self.titre) #Permet de générer un slug à partir d'une chaine de caractères
+        try:
+            this = Article.objects.get(id=self.id) #Récupère l'image actuelle
+            if this.photo != self.photo: 
+                this.photo.delete(save=False) #Supprime l'image actuelle pour faire place à la nouvelle
+        except: pass
         if self.photo: # Evite le cas où l'image est celle par défaut
             img = Image.open(self.photo) # Pour changer la dimension d'une image enregistrée pour ne pas qu'elle prenne trop de place dans la bdd
             size_max_img = 40000 #Taille maximale de l'image
@@ -100,9 +105,7 @@ class CommentSection(models.Model):
     nombre_mots_afficher = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        print(str(self.comment).split(), list(self.comment))
         self.number_words = len(str(self.comment).split()) + 10*list(self.comment).count('\n')
-        print(self.number_words)
         #Traite le cas des longs commentaires avec une option "Lire la suite"
         #Traitement spécifique aux commentaires avec beaucoup de saut de ligne
         #On définit ici une limite de 100 mots visible par commentaire
