@@ -9,10 +9,13 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import markdown
+# import markdown
 from connexion.models import Profile
-from django.views.decorators.csrf import csrf_exempt
 import datetime
+from django.views.decorators.csrf import csrf_exempt,csrf_protect 
+from django.http import HttpResponse
+
+
 # Create your views here.
 
 def index(request):
@@ -94,6 +97,7 @@ def search_title_auteur(request):
 	articles = Article.objects.filter(Q(titre__contains=search_text) | Q(auteur_livre__contains=search_text))
 	return render(request, 'blog_livreSF/ajax_search_title_auteur.html', {'articles' : articles, "text": search_text})
 
+@csrf_exempt
 def add_genre(request):
 	new_genre = request.POST.get('new_genre', '')
 	Genre(genre_litteraire=new_genre).save()
@@ -156,7 +160,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 	def form_valid(self, form): #Permet de fixer des valeurs du modèle
 		form.instance.auteur_blog = self.request.user
 		form.instance.auteur_blog.profile.nombre_post_ecrit += 1
-		form.instance.auteur_blog.save()
+		form.instance.auteur_blog.profile.save()
 		messages.success(self.request, "Youhou un nouvel article ! Bravo et merci de votre investissement et apport culturel certain ;)" )
 		return super().form_valid(form)
 
@@ -246,7 +250,6 @@ class PostLikeAPIToggle(APIView):
 		"count": count,
 		}
 		return Response(data)
-
 
 
 
