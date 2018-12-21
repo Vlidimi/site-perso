@@ -1,0 +1,93 @@
+{% extends 'layouts/base.html' %}
+{% load markdown_deux_tags %}
+{% block title %}{{ nouvelleecrite.titre }}{% endblock %}
+{% block content %}
+
+
+<div class="card  text-center border-0 nuage" >
+	<div class="card-body">
+		
+		<blockquote class="blockquote mb-0">	
+			<h3> 
+				{{ nouvelleecrite.titre }} de {{ nouvelleecrite.auteur_livre }}
+			</h3>
+
+			<footer class="blockquote-footer" >
+				<br>
+				Régigé par {{ nouvelleecrite.auteur_nouvelle.profile.pseudo }}
+				<cite style="margin-left: 20px;">
+					{% if nombre_mots <= 1 %} {{ nombre_mots }} mot
+					{% else %} {{ nombre_mots }} mots
+					{% endif %}
+				</cite> 
+				<cite style="margin-left: 20px;">
+					{% if nouvelleecrite.commentsection_set.count <= 1 %} {{ nouvelleecrite.commentsection_set.count }} commentaire
+					{% else %} {{ nouvelleecrite.commentsection_set.count }} commentaires
+					{% endif %}
+				</cite> 
+				<cite style="margin-left: 20px;">
+					écrit le {{ nouvelleecrite.date|date:"DATE_FORMAT" }}
+				</cite>
+				<cite style="margin-left: 20px;">
+					{% if nouvelleecrite.modification %}
+						modifié le {{ nouvelleecrite.updated_at|date:"DATE_FORMAT" }}
+					{% endif %} 
+				</cite>
+			</footer>
+
+		</blockquote>
+	</div>
+
+</div>
+<div class="card text-center border-0 nuage" >
+	<div class="card-body">
+		<br>
+		{% if nouvelleecrite.contenu != '' %}
+			<p>
+				<h2>Contenu :</h2> 
+				<br> 
+				{{ nouvelleecrite.contenu|markdown }}
+			</p>
+		{% endif %}
+		<br>
+		{% if nouvelleecrite.auteur_nouvelle.profile.signature %}
+			<p class="signature">{{ nouvelleecrite.auteur_nouvelle.profile.signature }}</p>
+		{% endif %}
+	</div>
+
+	<p> 
+		Vous avez aimé ? Faites le savoir ! 
+		<br>
+		Smash that button
+		<br>
+		<div style="margin-top: -23px;">Or leave a comment !</div>  
+		{% if user.is_authenticated == False %}
+			<br>
+			<div>Mais pour pouvoir faire tout ça, il faut vous enregistrer et c'est pas bien compliqué, car ça se passe juste <a href="{% url 'connexion:connexion' %}">là</a></div>  
+		{% endif %}
+	</p>
+	<p>
+		
+	</p>
+</div>
+{% if user.username == nouvelleecrite.auteur_nouvelle or user.is_superuser %}
+	<a class="btn btn-outline-primary" href="{% url 'nouvelle:nouvelle-update' nouvelleecrite.id nouvelleecrite.slug %}">Modifier la nouvelle</a>
+	<a class="btn btn-outline-danger" href="{% url 'nouvelle:nouvelle-delete' nouvelleecrite.id nouvelleecrite.slug %}">Supprimer la nouvelle</a>
+	<br>
+	<br>
+{% endif %}
+
+{% if user.is_authenticated %}
+<br>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include './form_help_local.html' with form=form particular_field='Comment' particular_placeholder="Vient me faire disparaitre en laissant un commentaire ;)" particular_label_tag="" %}
+    <input type="submit" name="laisser_commentaire" value="Envoyer" />
+</form>
+{% endif %}
+
+
+<br>
+<a href="{% url 'nouvelle:index' %}">Retour à l'index </a>
+{% endblock %}
+

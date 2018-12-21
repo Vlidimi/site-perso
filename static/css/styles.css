@@ -125,10 +125,10 @@ body {
 		bottom: -0.5vw;
 	}
 	.navbar-right #entourer_forum {
-		width: 6.5vw;
+		bottom: -0.5vw;
 		height: 3vw;
 		left: -1vw;
-		bottom: -0.5vw;
+		width: 6.5vw;
 	}
 	.navbar-right #entourer_profile {
 		width: 13vw;

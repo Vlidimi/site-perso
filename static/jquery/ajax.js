@@ -91,7 +91,7 @@ $(function(){
 
 });
 
-// Requete ajax pour le bouton like
+// Requete ajax pour ajouter un genre litteraire
 $(function(){
 	$('#button_sub').click(function(){
 		var this_ = $(this);
@@ -106,6 +106,27 @@ $(function(){
 			success: function(data){
 				$('#all_genre').html(data);
 				$('#hide_new_genre').hide();
+				$('#success_message').css('display', 'inline');
+			}
+		});
+	});
+});
+
+// Requete Ajax pour ajouter un tag à une nouvelle
+$(function(){
+	$('#button_sub_tag').click(function(){
+		var this_ = $(this);
+		var new_tag = $('#new_tag').val();
+		$.ajax({
+			type: "POST",
+			url: "/blog_livreSF/ajax/add_tag/",
+			data: {
+				'new_tag' : new_tag
+			},
+
+			success: function(data){
+				$('#all_tag').html(data);
+				$('#hide_new_tag').hide();
 				$('#success_message').css('display', 'inline');
 			}
 		});

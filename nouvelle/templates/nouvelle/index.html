@@ -1,0 +1,65 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Nouvelle{% endblock %}
+
+
+{% block content %} 
+<div style="z-index: 1;right: 0; position: fixed; width: 20%;">
+    <div class="card  ">
+    <div class="card-body">
+        <h5 class="card-title adaptative-lenght-title"> Divers</h5>
+        <a class="adaptative-lenght-normal" href="{% url 'nouvelle:index' %}"> Retour à l'index général</a> <br>
+        <a class="adaptative-lenght-normal" href="{% url 'nouvelle:write_a_nouvelle' %}"> Ecrire une nouvelle</a>
+
+    </div>
+    </div>
+</div>
+
+{% if nouvelles_posts %}
+    {% for nouvelleecrite in nouvelles_posts %} 
+        <div class="container" style="left: 0;position: relative;" >
+            <div class="card-group row " style="width: 85%; ">
+                <div class="card border-dark col-md-3">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ nouvelleecrite.auteur_nouvelle.profile.avatar }}" alt="Card image cap">
+                    <div class="card-body text-center">
+                    <h5 class="card-title"><a href="{% url 'connexion:profile-other-user' nouvelleecrite.auteur_nouvelle.profile.slug_pseudo %}">{{ nouvelleecrite.auteur_nouvelle.profile.pseudo }}</a> <br> <p style="font-size: small; font-style:italic ;">{{ nouvelleecrite.auteur_nouvelle.profile.rang }}</p ></h5>
+                    <p style="font-size: 80%;" class="card-text"> Nombre de posts écrits: {{ nouvelleecrite.auteur_nouvelle.profile.nombre_post_ecrit }} </p>
+                    </div>
+                </div>
+
+                <div class="card border-dark">
+                    <div class="card-md-4">
+                        <div class="card-body">
+                        <h4 class="card-title">
+                            {{ nouvelleecrite.titre }} de {{ nouvelleecrite.auteur_livre }}
+                        </h4> 
+                        <p class="card-title">Catégorie :
+                                {% for i in nouvelleecrite.genre.all %} 
+                                        &nbsp; {{ i.genre_litteraire }} 
+                                {% endfor %} </p>
+
+                                <p class="card-title">Nombre de mots : {{ nouvelleecrite.word_count}} </p>
+                        </div>
+                    </div>
+                    <div class="card-md-4">
+                        <div class="card-body">
+                            <p class="card-text">{{ nouvelleecrite.contenu|truncatechars:500 }} </p>
+                            
+                            <a href="{% url 'nouvelle:show' nouvelleecrite.id nouvelleecrite.slug %}" class="btn btn-primary">Lire la suite</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <br>
+      
+
+    {% endfor %}
+       
+
+{% else %}
+    <p> Pinut</p>
+{% endif %}
+{% endblock %}
+
+    <!-- {% include 'layouts/pagination.html' with users=posts %} -->
