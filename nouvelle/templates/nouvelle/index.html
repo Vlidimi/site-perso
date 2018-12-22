@@ -4,13 +4,27 @@
 
 {% block content %} 
 <div style="z-index: 1;right: 0; position: fixed; width: 20%;">
-    <div class="card  ">
-    <div class="card-body">
-        <h5 class="card-title adaptative-lenght-title"> Divers</h5>
-        <a class="adaptative-lenght-normal" href="{% url 'nouvelle:index' %}"> Retour à l'index général</a> <br>
-        <a class="adaptative-lenght-normal" href="{% url 'nouvelle:write_a_nouvelle' %}"> Ecrire une nouvelle</a>
-
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title adaptative-lenght-title"> Nuage de tags </h5>
+            <div id="tags_choisis" style="display: none">
+                
+            </div>
+            <div>
+                {% for i in tags %}
+                    <span class="liste_tags" style="border:1px solid black; padding: 3px;" id_tag="{{ i.id }}" > {{ i }} </span>
+                {% endfor %}
+            </div>
+            <div id="reset_tag" style="display: none"> Remise à zéro des tags </div>
+        </div>
     </div>
+    <div class="card  ">
+        <div class="card-body">
+            <h5 class="card-title adaptative-lenght-title"> Divers</h5>
+            <a class="adaptative-lenght-normal" href="{% url 'nouvelle:index' %}"> Retour à l'index général</a> <br>
+            <a class="adaptative-lenght-normal" href="{% url 'nouvelle:write_a_nouvelle' %}"> Ecrire une nouvelle</a>
+
+        </div>
     </div>
 </div>
 

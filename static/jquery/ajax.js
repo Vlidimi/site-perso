@@ -22,6 +22,7 @@ $.ajaxSetup({
      } 
 });
 
+//Ajax recherche par genre
 $(function(){ // Attendre que le document soit totalement chargé, équivaut à $(document).ready(function(){
 
 	$('#search').keyup(function() { // le # fait référence à l'id qui doit être unique. Utilise lorsque le l'on veut qu'un unique élément
@@ -46,6 +47,26 @@ $(function(){ // Attendre que le document soit totalement chargé, équivaut à 
 
 });
 
+// Ajax recherche par tag
+$(function(){
+	$('.liste_tags').click(function(){
+		var this_ = $(this);
+		var id_tag = this_.attr('id_tag');
+		console.log(id_tag)
+		$.ajax({
+			type: "GET",
+			url: "/nouvelle/ajax/nuage_tag/",
+			data: {
+				'id_tag': id_tag
+			},
+
+			success: function(data){
+				$('#search-tags').html(data);	
+			}
+		})
+	})
+});
+
  // Attendre que le document soit totalement chargé, équivaut à $(document).ready(function(){
 
 function updateText(btn, newCount, verb){ // fonction qui va servir d'affichage
@@ -68,7 +89,6 @@ $(function(){
 			data: {}, 
 
 			success: function(data){ // data provient de ce que renvoie likeURL
-				console.log(data)
 				if (data.liked){ // voir contenu de data 
 					PhotoURL = PhotoURL+'image_site/like_button.png'
 					updateText(this_, data.count, '')  // Ajout d'une fonction pour affichage

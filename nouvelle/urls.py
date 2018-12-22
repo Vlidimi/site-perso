@@ -11,6 +11,7 @@ urlpatterns = [
 	path('<int:id>/<slug:slug>/', views.show_blog, name='show'),
 	path('ajax/add_tag/', views.add_tag, name='add_tag'),
 	path('ajax/modify_comment/', views.modify_comment, name='ajax-modify-comment'),
+	path('ajax/nuage_tag/', views.nuage_tag, name='ajax-tag'),
 	path('<int:id>/<slug:slug>/likes/', views.NouvelleLikeToggle.as_view(), name='like-toggle'),
 	path('api/<int:id>/<slug:slug>/likes/', views.NouvelleLikeAPIToggle.as_view(), name='like-api-toggle'),
 	path('<int:id>/<slug:slug>/commentdelete/<int:pk>/', views.CommentDeleteView.as_view(), name='comment-delete'),

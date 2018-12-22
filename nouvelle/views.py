@@ -4,6 +4,7 @@ from .models import NouvelleEcrite, Tag, CommentSection
 from connexion.models import Profile
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.template.defaultfilters import slugify
@@ -218,3 +219,21 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 		if self.request.user.username == post.auteur_comment or self.request.user.is_superuser == True:
 			return True
 		return False
+
+def nuage_tag(request):
+	if request.is_ajax() and request.method == 'GET':
+		id_tag = request.GET.get('id_tag', None) # On extrait l'id du tag à ajouter
+		try:
+			if id_tag not in liste_de_tags:
+				liste_de_tags.append(id_tag)
+			else:
+				pass
+		except:
+			liste_de_tags = [id_tag]
+
+		tags = Tag.objects.all()
+		nouvelle = NouvelleEcrite.objects.all()
+		for tag in liste_de_tags:
+			nouvelle = nouvelle.filter(Q(tag=tag))
+		print("hey", nouvelle, liste_de_tags)
+		return render(request, 'nouvelle/index.html', {'nouvelleecrite' : nouvelle, 'tags': tags, 'liste_de_tags':liste_de_tags})
