@@ -30,11 +30,11 @@
                     <div class="card-md-4">
                         <div class="card-body">
                         <h4 class="card-title">
-                            {{ nouvelleecrite.titre }} de {{ nouvelleecrite.auteur_livre }}
+                            {{ nouvelleecrite.titre }}
                         </h4> 
-                        <p class="card-title">Catégorie :
-                                {% for i in nouvelleecrite.genre.all %} 
-                                        &nbsp; {{ i.genre_litteraire }} 
+                        <p class="card-title">Tags :
+                                {% for i in nouvelleecrite.tag.all %} 
+                                        &nbsp; {{ i.tags }} 
                                 {% endfor %} </p>
 
                                 <p class="card-title">Nombre de mots : {{ nouvelleecrite.word_count}} </p>
