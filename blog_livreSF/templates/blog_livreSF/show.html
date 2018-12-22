@@ -110,9 +110,7 @@
 			<div>Mais pour pouvoir faire tout ça, il faut vous enregistrer et c'est pas bien compliqué, car ça se passe juste <a href="{% url 'connexion:connexion' %}">là</a></div>  
 		{% endif %}
 	</p>
-	<p>
-		
-	</p>
+	
 </div>
 {% if user.username == article.auteur_blog or user.is_superuser %}
 	<a class="btn btn-outline-primary" href="{% url 'blog_livreSF:post-update' article.id article.slug %}">Modifier l'article</a>

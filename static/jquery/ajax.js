@@ -137,7 +137,6 @@ $(function(){
 $(function(){
 	$('#commentaire_auteur').click(function(){
 		if ($('#commentaire_auteur_show').css('display') == 'none'){
-			console.log("ici")
 			if ($('#confirmation_commentaire_auteur').css('display') == 'none')
 			{
 				$('#confirmation_commentaire_auteur').show()

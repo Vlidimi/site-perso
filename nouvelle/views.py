@@ -99,3 +99,56 @@ def add_tag(request):
 				'form' : NouvelleForm(), 
 	 		}
 	return render(request, 'nouvelle/ajax_new_tag.html', data )
+
+
+class NouvelleLikeToggle(LoginRequiredMixin, RedirectView):
+	login_url = 'connexion:connexion'
+
+	def get_redirect_url(self, *args, **kwargs):
+		id_ = self.kwargs.get("id")
+		post = get_object_or_404(NouvelleEcrite, pk=id_)
+		url_ = post.get_absolute_url()
+		user = self.request.user
+		if user in post.likes.all():
+			post.likes.remove(user)
+		else:
+			post.likes.add(user)
+		return url_
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from django.contrib.auth.models import User
+
+class NouvelleLikeAPIToggle(APIView):
+	"""
+	View to list all users in the system.
+
+	* Requires token authentication.
+	* Only admin users are able to access this view.
+	"""
+	authentication_classes = (authentication.SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request, id=None, slug=None, format=None):
+		id_ = self.kwargs.get("id")
+		post = get_object_or_404(NouvelleEcrite, id=id_)
+		user = self.request.user
+		updated = False
+		liked = False
+		if user.is_authenticated:
+			if user in post.likes.all():
+				liked = False
+				post.likes.remove(user)
+			else:
+				liked = True
+				post.likes.add(user)
+			updated = True
+		count = post.likes.count()
+		data = {
+		"updated": updated,
+		"liked": liked,
+		"count": count,
+		}
+		return Response(data)

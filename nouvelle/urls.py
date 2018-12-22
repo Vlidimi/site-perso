@@ -10,4 +10,7 @@ urlpatterns = [
 	path('write_a_nouvelle/', views.NouvelleCreateView.as_view(), name='write_a_nouvelle'),
 	path('<int:id>/<slug:slug>/', views.show, name='show'),
 	path('ajax/add_tag/', views.add_tag, name='add_tag'),
+	path('<int:id>/<slug:slug>/likes/', views.NouvelleLikeToggle.as_view(), name='like-toggle'),
+	path('api/<int:id>/<slug:slug>/likes/', views.NouvelleLikeAPIToggle.as_view(), name='like-api-toggle'),
+
 ]

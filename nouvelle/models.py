@@ -39,6 +39,12 @@ class NouvelleEcrite(models.Model):
 	def get_absolute_url(self):
 		return reverse('nouvelle:show', kwargs={'id':self.id, 'slug':self.slug})
 
+	def get_like_url(self):
+		return reverse('nouvelle:like-toggle', kwargs={'id':self.id, 'slug':self.slug})
+
+	def get_like_api_url(self):
+		return reverse('nouvelle:like-api-toggle', kwargs={'id':self.id, 'slug':self.slug})
+
 	def __str__(self):
 		""" 
 		Cette méthode que nous définirons dans tous les modèles

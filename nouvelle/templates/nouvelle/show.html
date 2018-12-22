@@ -44,7 +44,6 @@
 		<br>
 		{% if nouvelleecrite.contenu != '' %}
 			<p>
-				<h2>Contenu :</h2> 
 				<br> 
 				{{ nouvelleecrite.contenu|markdown }}
 			</p>
@@ -59,6 +58,15 @@
 		Vous avez aimé ? Faites le savoir ! 
 		<br>
 		Smash that button
+		<a class='like-btn' data-href="{{ nouvelleecrite.get_like_api_url }}" href="{{ nouvelleecrite.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ nouvelleecrite.slug }}">
+			{{ nouvelleecrite.likes.count }} 
+		    {% if user in nouvelleecrite.likes.all %}
+		        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+		    {% else %}
+		        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+		    {% endif %}
+		</a>  
+		<img id="{{ nouvelleecrite.slug }}" style="height:25px;margin-bottom: 7px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png">
 		<br>
 		<div style="margin-top: -23px;">Or leave a comment !</div>  
 		{% if user.is_authenticated == False %}
