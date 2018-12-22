@@ -135,26 +135,29 @@ $(function(){
 
 // Faire apparaitre ou non les commentaires de l'auteur 
 $(function(){
-	
 	$('#commentaire_auteur').click(function(){
-		if ($('#confirmation_commentaire_auteur').css('display') == 'none')
-		{
-			$('#confirmation_commentaire_auteur').show()
-			$('#confirmation_commentaire_auteur_ok').show()
+		if ($('#commentaire_auteur_show').css('display') == 'none'){
+			console.log("ici")
+			if ($('#confirmation_commentaire_auteur').css('display') == 'none')
+			{
+				$('#confirmation_commentaire_auteur').show()
+				$('#confirmation_commentaire_auteur_ok').show()
+			}
+			else{
+				$('#confirmation_commentaire_auteur').hide()
+				$('#confirmation_commentaire_auteur_ok').hide()
+			}
+			
 		}
 		else{
-			$('#confirmation_commentaire_auteur').hide()
-			$('#confirmation_commentaire_auteur_ok').hide()
+			$('#commentaire_auteur_show').hide()
 		}
-		
 	})
-
 	$('#confirmation_commentaire_auteur_ok').click(function(){
 		$('#commentaire_auteur_show').show()
 		$('#confirmation_commentaire_auteur').hide()
 		$('#confirmation_commentaire_auteur_ok').hide()
 	})
-
 })
 
 // En cas de suppression d'un message ou d'un blog :
