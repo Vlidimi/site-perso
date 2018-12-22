@@ -8,7 +8,7 @@ class NouvelleForm(forms.ModelForm):
 
     class Meta:
         model = NouvelleEcrite
-        exclude = ('auteur_nouvelle','slug', 'date', 'likes', 'updated_at', 'modification', 'tag',)
+        exclude = ('auteur_nouvelle','slug', 'date', 'likes', 'updated_at', 'modification',)
         # fields = '__all__'
     
     def __init__(self, *args, **kwargs):

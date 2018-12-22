@@ -21,8 +21,8 @@ from django.views.generic import (
 )
 def show(request, id, slug = ''):
 	post = get_object_or_404(NouvelleEcrite, pk=id)
-	print(post)
-	return render(request, 'nouvelle/show.html', {'nouvelleecrite': post, 'numero': id})
+	nombre_mots = len(post.contenu.split())
+	return render(request, 'nouvelle/show.html', {'nouvelleecrite': post, 'numero': id, 'nombre_mots':nombre_mots})
 
 class NouvelleListView(ListView):
 	model = NouvelleEcrite
@@ -36,7 +36,6 @@ class NouvelleListView(ListView):
 		
 		if type_tag != '' and type_tag != "Tous les tags":
 			context['nouvelles_posts'] = Tag.objects.filter(tags=type_tag)[0].post_tags.all()
-		print(context)
 		for post in context['nouvelles_posts']:
 			post.word_count =len(post.contenu.split()) 
 

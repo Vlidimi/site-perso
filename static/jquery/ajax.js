@@ -119,19 +119,43 @@ $(function(){
 		var new_tag = $('#new_tag').val();
 		$.ajax({
 			type: "POST",
-			url: "/blog_livreSF/ajax/add_tag/",
+			url: "/nouvelle/ajax/add_tag/",
 			data: {
 				'new_tag' : new_tag
 			},
 
 			success: function(data){
-				$('#all_tag').html(data);
-				$('#hide_new_tag').hide();
+				$('#all_tag').html(data); //Affiche la donnée
+				$('#hide_new_tag').hide(); //On cache le précédant form sur le tag, cf form_help.html
 				$('#success_message').css('display', 'inline');
 			}
 		});
 	});
 });
+
+// Faire apparaitre ou non les commentaires de l'auteur 
+$(function(){
+	
+	$('#commentaire_auteur').click(function(){
+		if ($('#confirmation_commentaire_auteur').css('display') == 'none')
+		{
+			$('#confirmation_commentaire_auteur').show()
+			$('#confirmation_commentaire_auteur_ok').show()
+		}
+		else{
+			$('#confirmation_commentaire_auteur').hide()
+			$('#confirmation_commentaire_auteur_ok').hide()
+		}
+		
+	})
+
+	$('#confirmation_commentaire_auteur_ok').click(function(){
+		$('#commentaire_auteur_show').show()
+		$('#confirmation_commentaire_auteur').hide()
+		$('#confirmation_commentaire_auteur_ok').hide()
+	})
+
+})
 
 // En cas de suppression d'un message ou d'un blog :
 $(function(){
