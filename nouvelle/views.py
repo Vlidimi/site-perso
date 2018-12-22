@@ -1,6 +1,6 @@
 
-from .forms import NouvelleForm
-from .models import NouvelleEcrite, Tag
+from .forms import NouvelleForm, CommentSectionForm
+from .models import NouvelleEcrite, Tag, CommentSection
 from connexion.models import Profile
 from django.conf import settings
 from django.contrib import messages
@@ -23,6 +23,55 @@ def show(request, id, slug = ''):
 	post = get_object_or_404(NouvelleEcrite, pk=id)
 	nombre_mots = len(post.contenu.split())
 	return render(request, 'nouvelle/show.html', {'nouvelleecrite': post, 'numero': id, 'nombre_mots':nombre_mots})
+
+def show_blog(request, id, slug):
+	post = get_object_or_404(NouvelleEcrite, pk=id)
+	nombre_mots = len(post.contenu.split())
+	if request.method == 'POST' and request.user.is_authenticated and 'laisser_commentaire' in request.POST:
+	 	form = CommentSectionForm(request.POST)
+	 	if form.is_valid():
+	 		commentaire = form.save(commit=False)
+	 		commentaire.auteur_comment = request.user
+	 		commentaire.nouvelle = post
+	 		commentaire.save()
+	 		messages.success(request, "Commentaire envoyé ! Merci d'avoir pris le temps de partager votre avis :)")
+	 		form = CommentSectionForm()
+	 		return render(request, 'nouvelle/show.html', {'nouvelleecrite':post, 'form':form, 'nombre_mots':nombre_mots})
+
+	elif request.method == 'POST' and request.user.is_authenticated :
+		my_dict = dict(request.POST) #Request.POST est un QueryDict que l'on transforme en dict
+		for cle, valeur in my_dict.items(): #On balaie le dictionnaire
+			if valeur == ['Submit']: # Sans que je sache pourquoi le name de l'input dans ajax_modify_comment se retrouve en clé avec pour valeur ['Submit']
+				name = cle           # Etant donné que le nom est composé comme "modifier_commentaire_{{ id_comment }}"
+		type_button = name[:20] 
+		id_comment = int(name[21:])
+		commentaire = get_object_or_404(CommentSection, pk=id_comment)
+		form = CommentSectionForm(request.POST, instance=commentaire)
+		if form.is_valid():
+			commentaire = form.save(commit=False)
+			commentaire.modification = True
+			commentaire.updated_at = datetime.datetime.now()
+			commentaire.auteur_comment = request.user
+			commentaire.nouvelle = post
+			commentaire.save()
+			messages.success(request, "Commentaire modifié ! On ne peut être parfait du premier coup ;) ")
+			form = CommentSectionForm()
+			return render(request, 'nouvelle/show.html', {'nouvelleecrite':post, 'form':form, 'nombre_mots':nombre_mots})
+	else: 
+		form = CommentSectionForm()
+	return render(request, 'nouvelle/show.html', {'nouvelleecrite':post, 'form':form, 'nombre_mots':nombre_mots})
+
+
+
+
+@csrf_exempt
+def modify_comment(request): #Fonctionne avec requete ajax pour modifier un commentaire
+	if request.is_ajax() and request.method == 'POST':
+		id_comment = request.POST.get('id_comment', None) # On extrait l'id du commentaire à modifier
+		commentaire = get_object_or_404(CommentSection, pk=id_comment)
+		form = CommentSectionForm(instance=commentaire) # La form qui sera affichée
+		modifier_commentaire_id = "modifier_commentaire_" + str(id_comment) # Pour le nom que l'on récupèrera avec l'id afin de savoir quel commentaire a été modifié cf show_blog 
+		return render(request, 'nouvelle/ajax_modify_comment.html', {'form_comment' : form, 'modifier_commentaire_id': modifier_commentaire_id})
 
 class NouvelleListView(ListView):
 	model = NouvelleEcrite
@@ -152,3 +201,20 @@ class NouvelleLikeAPIToggle(APIView):
 		"count": count,
 		}
 		return Response(data)
+
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = CommentSection
+	login_url = 'connexion:connexion'
+
+	def get_success_url(self): #Renvoie l'url en cas de succès
+		post = self.get_object()
+		messages.warning(self.request, "Commentaire supprimé :o Vous êtes donc allé jusqu'au bout, je ne sais si je dois saluer votre motivation :p J'espère quand même que ce n'était qu'un méchant commentaire :3")
+		return  reverse("nouvelle:show", kwargs={'id':post.article.id, 'slug':post.article.slug})
+
+	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
+		post = self.get_object()
+		if self.request.user.username == post.auteur_comment or self.request.user.is_superuser == True:
+			return True
+		return False

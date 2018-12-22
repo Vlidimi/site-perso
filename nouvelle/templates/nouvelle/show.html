@@ -100,6 +100,54 @@
 </form>
 {% endif %}
 
+<br>
+{% for comment in nouvelleecrite.commentsection_set.all %}
+
+	<div class="container " style="left: 0;position: relative;" >
+        <div class="card-group row " style="width: 100%; ">
+            <div class="card border-right-0 border-dark col-md-1  ">
+                <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ comment.auteur_comment.profile.avatar }}" alt="Card image cap">
+            </div>
+            <div class="card border border-dark border-left-0">
+            	<h5 class="card-title"> 
+            		<a class="card-body" href="{% url 'connexion:profile-other-user' comment.auteur_comment.profile.slug_pseudo %}">{{ comment.auteur_comment.profile.pseudo }}</a>
+            		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
+            		posté le : {{ comment.date }} 
+            		{% if comment.modification %}
+						modifié le : {{ comment.updated_at }}
+					{% endif %}	
+					</div>		
+				</h5>
+				<div class="card-body" id="message_{{ comment.id }}">
+					{% if comment.number_words <= 100 %}
+						{{ comment.comment|markdown }}
+					{% else %}
+						<div id="show_short_comment_{{ comment.pk }}"  style="display: inline;">
+							{{ comment.comment|markdown|truncatewords:comment.nombre_mots_afficher }}
+							<div id="button_more_comment" id_comment = "{{ comment.pk }}" style="font-weight:bold"> Lire la suite </div>
+						</div>
+						<div id="show_long_comment_{{ comment.pk }}"  style="display: none;">
+							{{ comment.comment|markdown }}
+							<div id="button_less_comment" id_comment = "{{ comment.pk }}" style="font-weight:bold"> Moins </div>
+						</div>
+					{% endif %}
+					<br>
+					{% if comment.auteur_comment.profile.signature != '' %}
+					<div class="signature"> {{ comment.auteur_comment.profile.signature }}</div>
+					{% endif %}
+					<br>
+					{% if user == comment.auteur_comment or user.is_superuser %}
+						<div class="btn btn-outline-primary comment_button" href="{% url 'nouvelle:ajax-modify-comment' %}" id_comment="{{ comment.id }}">Modifier le commentaire</div>
+						<a class="btn btn-outline-danger" href="{% url 'nouvelle:comment-delete' nouvelleecrite.id nouvelleecrite.slug comment.pk %}">Supprimer le commentaire</a>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+{% endfor %}
+
 
 <br>
 <a href="{% url 'nouvelle:index' %}">Retour à l'index </a>

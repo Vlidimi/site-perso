@@ -1,0 +1,6 @@
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include './form_help.html' with form=form_comment %} 
+
+	<input type="submit" value="Submit" name="{{ modifier_commentaire_id }}" />
+</form>

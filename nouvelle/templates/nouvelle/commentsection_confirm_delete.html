@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Blog{% endblock %}
+
+{% block content %} 
+
+<!-- <form action="{% url 'blog_livreSF:write_a_blog' %}" method="post">
+ -->
+    <h2> Etes vous sur de vouloir supprimer votre commentaire ?  </h2>
+    <div> Pour rappel : </div>
+<div class="container" style="left: 0;position: relative;" >
+    <div class="card-group row" style="width: 100%; ">
+        <div class="card col-md-1 border-0">
+            <img class="card-img-top-center" style="max-width: 100%; height: auto;text-align: center" src="{{ MEDIA_URL }}{{ object.auteur_comment.profile.avatar }}" alt="Card image cap">
+        </div>
+        <div class="card border">
+        	<h5 class="card-title"> 
+        		<a class="card-body" href="{% url 'connexion:profile-other-user' object.auteur_comment.profile.slug_pseudo %}">{{ object.auteur_comment.profile.pseudo }}</a>
+        		<div style="float:right; font-size: 15px; color: grey; font-style:italic">
+        		posté le : {{ object.date }} 
+        		{% if object.modification %}
+					modifié le : {{ object.updated_at }}
+				{% endif %}	
+				</div>		
+			</h5>
+			<div class="card-body">
+				{{ object.comment }}
+			</div>
+		</div>
+	</div>
+</div>
+
+    <div id='tenta1_message' style="display: none;"> <br> Cette action est irréversible ! Après cela, votre commentaire n'existera plus dans d'autres lieux que la mémoire de ceux qui l'ont lu... c'est à dire qu'il est voué à disparaitre très très vite ... <br></div>
+    <div id='tenta2_message' style="display: none;"> Sauf bien entendu de ma mémoire, dans laquelle ce commentaire, je n'en doute pas très bienveillant, restera à jamais gravé ! <br>  </div>
+    <div id='tenta3_message' style="display: none;"> Après s'il est bienveillant, pourquoi l'effacer ? Ce serait une drôle d'idée ! Est ce que cela signifierait ... pour que vous vouliez l'effacer... qu'il soit ... méchant ? :o  <br> </div>
+    <div id='tenta4_message' style="display: none;"> Ne vous en faites pas, je pardonne, et vous pouvez expier vos péchés, non pas en le supprimant, mais en le modifiant, pour lui rendre la grâce, la délicatesse et la volupté qui lui incombe ! Afin qu'il vous ressemble en d'autres mots :) <br>  </div>
+    <div id='tenta5_message' style="display: none;"> Alors êtes vous bien certain ? (et là, vous vous posez probablement la question "Mais quand diable ce malotru va-t-il cesser ces fastidueuses élucubrations et vais je enfin pouvoir néantiser ce commentaire ?" et la réponse est ... bientôt ... très bientôt... peut être même au prochain click ... <br></div>
+    <button class="btn btn-outline-danger" id="tenta1">Yes, Delete</button>
+    <button class="btn btn-outline-danger" style="display: none;" id="tenta2" >Yes, Delete</button>
+    <button class="btn btn-outline-danger" style="display: none;" id="tenta3" >Yes, Delete</button>
+    <button class="btn btn-outline-danger" style="display: none;" id="tenta4" >Yes, Delete</button>
+    <button class="btn btn-outline-danger" style="display: none;" id="tenta5" isLast="True" >Yes, Delete</button>
+    <a id="cancel_button" class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.article.id object.article.slug %}">Cancel</a>
+ <form id="final_tenta" style="display: none" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <input class="btn btn-outline-danger" type="submit" value="Yes, Delete" />
+    <a class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.article.id object.article.slug %}">Cancel</a>
+</form>
+
+{% endblock %}

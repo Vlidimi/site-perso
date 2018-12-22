@@ -1,5 +1,5 @@
 from django import forms
-from .models import NouvelleEcrite
+from .models import NouvelleEcrite, CommentSection
 from connexion.models import User
 # import markdown
 
@@ -30,3 +30,8 @@ class NouvelleForm(forms.ModelForm):
         if not contenu:
             self.add_error("contenu","Il faut bien écrire un petit quelque chose ! Je ne me permettrai pas de douter de votre génie créatif mais quand même ... laissez le s'exprimer ;) ")
         return cleaned_data
+
+class CommentSectionForm(forms.ModelForm):
+    class Meta:
+        model = CommentSection
+        fields = ('comment',)
