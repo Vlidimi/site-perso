@@ -9,7 +9,13 @@
 	padding: 0;
 
 }
-
+.url_like { 
+	color: #0060C0;
+}
+.url_like:hover { 
+	text-decoration: underline;
+	cursor: pointer;
+}
 div.petittest {
   white-space: nowrap; 
   width: 50px; 
@@ -327,6 +333,25 @@ div #entourer_connexion {
 
 }
 
+#question_mark{
+	vertical-align: super; /*le mettre en exposant*/
+	font-size: 10px;
+}
+#precision_question_mark {
+    display: none;
+    font-size: 10px;
+    font-style: italic;
+}
+span#question_mark:hover {
+	color: #1ce
+}
+
+/* passe au dessus de question_mark alors on fait qq chose sur precision*/
+span#question_mark:hover + span#precision_question_mark {
+    display: block;
+}
+
+
 div #cercle {
 	background:#F32020;
 	border-radius:50%;
@@ -365,3 +390,9 @@ div #nombre_message_non_lu {
   }
 }
 
+.liste_tags {
+/*	border:1px solid black; 
+*/	padding-right: 3px;
+	padding-left: 3px;
+	border-radius:20%;
+}

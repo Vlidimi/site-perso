@@ -1,36 +1,17 @@
-{% extends 'layouts/base.html' %}
-{% block title %}Nouvelle{% endblock %}
 
-
-{% block content %}
-<div style="z-index: 1;right: 0; position: fixed; width: 20%;">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title adaptative-lenght-title"> Nuage de tags <span id="question_mark">[?]</span> <span id="precision_question_mark"> <br> Cliquez sur un tag pour l'ajouter. Cliquer à nouveau sur un tag déjà choisi pour l'enlever.</span></h5>
-            
-            <div id="super_test">
-                {% for i in tags %}
-                    <span class="liste_tags" id_tag="{{ i.id }}" > {{ i }} </span>
-                {% endfor %}
+{% if liste_tag %}
+    <div style="z-index: 1;right: 0; position: fixed; width: 20%; bottom: 0">
+        <div class="card">
+            <div class="card-body">
+                <div> <h5> Tags choisis : </h5> 
+                    {% for i in liste_tag %}
+                        <span class="liste_tags" id_tag="{{ i.id }}" > {{ i }} </span>
+                    {% endfor %}
+                </div>
             </div>
-            <br>
-            <div class="url_like" id="remise_zero" style="display: none;"> Remise à zéro des tags </div>
         </div>
     </div>
-    <div class="card  ">
-        <div class="card-body">
-            <h5 class="card-title adaptative-lenght-title"> Divers</h5>
-            <a class="adaptative-lenght-normal" href="{% url 'nouvelle:index' %}"> Retour à l'index général</a> <br>
-            <a class="adaptative-lenght-normal" href="{% url 'nouvelle:write_a_nouvelle' %}"> Ecrire une nouvelle</a>
-
-        </div>
-    </div>
-</div>
-
-<br>
-<br>
-<div id='avec_tag'></div>
-<div id='sans_tag'>
+{% endif %}
 
 {% if nouvelles_posts %}
     {% for nouvelleecrite in nouvelles_posts %} 
@@ -78,7 +59,3 @@
 {% else %}
     <p> Pinut</p>
 {% endif %}
-</div>
-{% endblock %}
-
-    <!-- {% include 'layouts/pagination.html' with users=posts %} -->

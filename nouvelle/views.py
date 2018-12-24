@@ -220,20 +220,38 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
+from django.core import serializers
+from django.http import HttpResponse
+
+
 def nuage_tag(request):
 	if request.is_ajax() and request.method == 'GET':
-		id_tag = request.GET.get('id_tag', None) # On extrait l'id du tag à ajouter
-		try:
-			if id_tag not in liste_de_tags:
-				liste_de_tags.append(id_tag)
-			else:
-				pass
-		except:
-			liste_de_tags = [id_tag]
-
+		liste_tag = request.GET.getlist('liste_tag[]', None) # On extrait la liste d'id à prendre en compte
+		# REMARQUE : utilisation de GETLIST pour obtenir une list et non un simple str
 		tags = Tag.objects.all()
 		nouvelle = NouvelleEcrite.objects.all()
-		for tag in liste_de_tags:
-			nouvelle = nouvelle.filter(Q(tag=tag))
-		print("hey", nouvelle, liste_de_tags)
-		return render(request, 'nouvelle/index.html', {'nouvelleecrite' : nouvelle, 'tags': tags, 'liste_de_tags':liste_de_tags})
+		if liste_tag != None:
+			liste_nom_tag = []
+			for tag in liste_tag:
+				nouvelle = nouvelle.filter(Q(tag=tag)) #Ajoute un filtre de choix en fonction des tags choisis
+				liste_nom_tag.append(Tag.objects.get(id=tag).tags) #Ici on récupère le nom des tags sélectionnés
+		for post in nouvelle:
+			post.word_count =len(post.contenu.split()) #Nombre de mots dans chaque nouvelle 
+		return render(request, 'nouvelle/ajax_tag_list.html', {'nouvelles_posts' : nouvelle, 'liste_tag': liste_nom_tag, 'tags' :tags})
+import random
+from django.http import JsonResponse
+import string
+
+
+def random_color(request):
+	color_list = ['00', '10', '20', '30', '40', '50', '60', '70', '80', '90','A0', 'B0', 'C0', 'D0', 'E0', 'F0', 'FF']
+	color = '#'
+	less_bright = 0
+	for i in range(3):
+		if True in [i in string.ascii_lowercase for i in color]:
+			less_bright = 7
+		entier_random = random.randint(0,len(color_list)-1-less_bright)
+		color = color + color_list[entier_random]
+	data = { 'color_rand' : color}
+	print('hey',data)
+	return JsonResponse(data)

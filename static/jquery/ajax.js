@@ -49,23 +49,65 @@ $(function(){ // Attendre que le document soit totalement chargé, équivaut à 
 
 // Ajax recherche par tag
 $(function(){
+	var liste_tag = [] // Se réinitialise à chaque chargement de page
+	var res = []
 	$('.liste_tags').click(function(){
 		var this_ = $(this);
 		var id_tag = this_.attr('id_tag');
-		console.log(id_tag)
+		var id_int = parseInt(id_tag) // Le transforme en un entier
+		if(jQuery.inArray(id_int, liste_tag) == -1){ //Check si id_tag n'est pas déjà dans la liste
+			liste_tag.push(id_int) // Ajoute id_int dans la liste
+		}
+		else{ //On enlève l'id s'il est déjà présent (correspond à on enlève le tag)
+			liste_tag.splice( liste_tag.indexOf(id_int), 1 ); // Enlève id_int de la liste
+		}
 		$.ajax({
 			type: "GET",
 			url: "/nouvelle/ajax/nuage_tag/",
 			data: {
-				'id_tag': id_tag
+				'liste_tag': liste_tag
 			},
-
 			success: function(data){
-				$('#search-tags').html(data);	
+				$('#avec_tag').css('display', 'inline')
+				$('#avec_tag').html(data);
+				$('#sans_tag').css('display', 'none')
+				$('#remise_zero').css('display', 'inline')
 			}
 		})
 	})
+	$('#remise_zero').click(function(){
+		var this_ = $(this);
+		liste_tag = []
+		$.ajax({
+			type: "GET",
+			url: "/nouvelle/ajax/nuage_tag/",
+			data: {
+				'liste_tag': liste_tag
+			},
+			success: function(data){
+				$('#avec_tag').css('display', 'none')
+				$('#sans_tag').css('display', 'inline')
+				$('#remise_zero').css('display', 'none')
+			}
+		})
+	})
+	
 });
+$(function(){
+	$('.liste_tags').each(function( i ){
+		var this_ = $(this)
+		$.ajax({
+			type: "GET",
+			url: "/nouvelle/ajax/random_color/",
+			
+			success: function(data){
+				this_.css('color', data.color_rand)
+			}
+		})
+		
+	})
+})
+
 
  // Attendre que le document soit totalement chargé, équivaut à $(document).ready(function(){
 
