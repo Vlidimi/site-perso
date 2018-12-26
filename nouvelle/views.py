@@ -245,13 +245,12 @@ import string
 
 def random_color(request):
 	color_list = ['00', '10', '20', '30', '40', '50', '60', '70', '80', '90','A0', 'B0', 'C0', 'D0', 'E0', 'F0', 'FF']
-	color = '#'
+	color = '#' 
 	less_bright = 0
 	for i in range(3):
-		if True in [i in string.ascii_lowercase for i in color]:
-			less_bright = 7
-		entier_random = random.randint(0,len(color_list)-1-less_bright)
+		if True in [i in string.ascii_lowercase for i in color]: #Evite que les couleurs soient trop claires
+			less_bright = 7 #Si jamais il y a eu une couleur claire (lettre) alor on évite qu'il y en ait une autre
+		entier_random = random.randint(0,len(color_list)-1-less_bright) #Génère un nombre aléatoire pour faire couleur aléatoire
 		color = color + color_list[entier_random]
 	data = { 'color_rand' : color}
-	print('hey',data)
 	return JsonResponse(data)

@@ -396,3 +396,6 @@ div #nombre_message_non_lu {
 	padding-left: 3px;
 	border-radius:20%;
 }
+.liste_tags:hover {
+	cursor: pointer;
+}

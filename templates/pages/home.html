@@ -13,11 +13,16 @@
 		<br>
 	</div>
 	<div class="container_home">
-		<div class="droite">
+		<div class="droite"> 
 			<h2 align="left"> Derniers Ajouts</h2>
 			<h3> Livres : </h3>
 			<p align="left"> {% for last in last_posts %}
 				<li> <a href="{% url 'blog_livreSF:show' last.pk last.slug %}"> {{ last.titre }} </a></li>
+				{% endfor %}
+			</p>
+			<h3> Nouvelles : </h3>
+			<p align="left"> {% for last in last_nouvelles %}
+				<li> <a href="{% url 'nouvelle:show' last.pk last.slug %}"> {{ last.titre }} </a></li>
 				{% endfor %}
 			</p>
 		</div>

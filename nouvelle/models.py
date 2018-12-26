@@ -24,7 +24,7 @@ class NouvelleEcrite(models.Model):
 	slug = models.SlugField(max_length=120)
 	updated_at = models.DateTimeField(auto_now=True)
 	modification = models.BooleanField(default=False)
-	information_additionnelle = models.TextField(blank=True, default='', help_text="Ecriture en markdown possible afin de structurer et d'accéder à des fonctionnalités d'HTML")
+	information_additionnelle = models.TextField(blank=True, default='', help_text="Ici vous pouvez ajouter des informations complémentaire telles que ds explications, des indices, des inspirations que vous avez eu, des références, ... en somme tout ce que vous voulez ! Cette partie sera cachée et dévoilée que si le lecteur en fait la demande.")
 	tag = models.ManyToManyField(Tag, blank=True, related_name='post_tag', help_text="N'hésitez pas à prendre un peu de temps pour spécifier quelques tags. C'est très pratique pour aiguiller le lecteur :) Si jamais le tag voulu n'apparait pas ici, vous pouvez en ajouter un en bas de ce formulaire ")
 
 	def save(self, *args, **kwargs):
