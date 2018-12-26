@@ -14,13 +14,6 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre_litteraire 
 
-class Sous_Genre(models.Model):
-    sous_genre_litteraire = models.CharField(max_length=30)
-    genre_litteraire = models.ForeignKey(Genre, on_delete=models.CASCADE)
- 
-    def __str__(self):
-        return "{0} dans la catégorie {1}".format(self.sous_genre_litteraire, self.genre_litteraire) 
-
 class Article(models.Model):
     titre = models.CharField(max_length=100)
     auteur_livre = models.CharField(max_length=42)
@@ -37,7 +30,6 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     modification = models.BooleanField(default=False)
     genre = models.ManyToManyField(Genre, blank=True, related_name='post_genre')
-    sous_genre = models.ManyToManyField(Sous_Genre, blank=True, related_name='post_sous_genre')
 
     def save(self, *args, **kwargs):
         self.slug= slugify(self.titre) #Permet de générer un slug à partir d'une chaine de caractères

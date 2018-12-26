@@ -5,7 +5,7 @@ from .models import Article, Genre
 
 class ArticleAdmin(admin.ModelAdmin):
    list_display   = ('titre', 'auteur_blog', 'date')
-   list_filter    = ('auteur_livre',) #'categorie',)
+   list_filter    = ('auteur_livre',) 
    date_hierarchy = 'date'
    ordering       = ('date', )
    search_fields  = ('titre', 'contenu', 'auteur_blog')
@@ -16,12 +16,12 @@ class ArticleAdmin(admin.ModelAdmin):
         # Fieldset 1 : info auteur du billet 'classes': ['collapse', ],
        ('Auteur de l\'article ', {
        		
-       		'fields': ('auteur_blog', )
+       		'fields': ('auteur_blog', 'date', )
        	}),
        # Fieldset 2 : meta-info (titre, auteur…)
        ('Information livre', {
             
-            'fields': ('titre', 'slug', 'auteur_livre') #, 'categorie')
+            'fields': ('titre', 'slug', 'auteur_livre', 'genre', 'likes') 
         }),
         # Fieldset 2 : contenu de l'article
         ('Contenu de l\'article', {
@@ -30,5 +30,5 @@ class ArticleAdmin(admin.ModelAdmin):
         }),
     )
 # admin.site.register(Categorie)
-admin.site.register(Article) #, ArticleAdmin)
+admin.site.register(Article, ArticleAdmin)
 admin.site.register(Genre)
