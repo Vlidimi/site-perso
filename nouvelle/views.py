@@ -12,6 +12,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt,csrf_protect 
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import JsonResponse
+
 from django.views.generic import (
 	ListView,
 	DetailView,
@@ -143,12 +145,16 @@ class NouvelleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 @csrf_exempt
 def add_tag(request):
 	new_tag = request.POST.get('new_tag', '')
-	Tag(tags=new_tag).save()
-	data = { 	
-				'field' : NouvelleForm().visible_fields()[-1], 
-				'form' : NouvelleForm(), 
-	 		}
-	return render(request, 'nouvelle/ajax_new_tag.html', data )
+	if new_tag not in [i.tags for i in Tag.objects.all()]:
+		Tag(tags=new_tag).save()
+		data = { 	
+					'field' : NouvelleForm().visible_fields()[-1], 
+					'form' : NouvelleForm(), 
+		 		}
+		return render(request, 'nouvelle/ajax_new_tag.html', data )
+	else:
+		data = {'success': 'False'}
+		return JsonResponse(data)
 
 
 class NouvelleLikeToggle(LoginRequiredMixin, RedirectView):
@@ -239,7 +245,6 @@ def nuage_tag(request):
 			post.word_count =len(post.contenu.split()) #Nombre de mots dans chaque nouvelle 
 		return render(request, 'nouvelle/ajax_tag_list.html', {'nouvelles_posts' : nouvelle, 'liste_tag': liste_nom_tag, 'tags' :tags})
 import random
-from django.http import JsonResponse
 import string
 
 

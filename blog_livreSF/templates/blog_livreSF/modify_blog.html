@@ -9,11 +9,22 @@
  -->
  <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
-    {% include './form_help.html' with form=form %}
-    <input type="submit" value="Submit" />
+    {% include './form_help.html' with form=form %} 
+
+    <div id="all_genre"></div>
+
+	<br>
+	<input type="submit" value="Submit" />
 </form>
 
+<br>
+
+<input type="text" placeholder="Ajout d'un nouveau genre" id="new_genre" size="24">
+<input type="submit" id="button_sub">
+<br>
+<small class="form-text text-muted" id="success_message" style="display: none"> Nouveau genre ajouté ! Merci d'avoir contribué à l'enrichissement et à la diversité culturelle de ce site ! Si tout c'est bien passé, vous pouvez maintenant le sélectionner dans la précédente liste :)  </small >   
+<small class="form-text text-muted" id="error_message" style="display: none"> Bah alors, on ne voit plus bien clair ? Il semblerait pourtant que le genre que vous voulez ajouter soit déjà présent ;)  </small >  
+<small class="form-text text-muted" id="echec_message" style="display: none"> Hum ... Il semblerait que le mot que vous souhaitez ajouter ne se trouve pas dans mon dictionnaire. Etes vous sur de l'avoir bien orthographié ? Ou ai-je à faire avec un petit malandrin ? ;p</small >   
+
  <p><a href="{% url 'blog_livreSF:show' article.id article.slug %}">Retour au post</a></p>
-
 {% endblock %}
-

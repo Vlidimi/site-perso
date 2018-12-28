@@ -13,7 +13,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from connexion.models import Profile
 import datetime
 from django.views.decorators.csrf import csrf_exempt,csrf_protect 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
 
 
 # Create your views here.
@@ -100,12 +101,16 @@ def search_title_auteur(request):
 @csrf_exempt
 def add_genre(request):
 	new_genre = request.POST.get('new_genre', '')
-	Genre(genre_litteraire=new_genre).save()
-	data = { 	
-				'field' : ArticleForm().visible_fields()[-1], 
-				'form' : ArticleForm(), 
-	 		}
-	return render(request, 'blog_livreSF/ajax_new_genre.html', data )
+	if new_genre not in [i.genre_litteraire for i in Genre.objects.all()]:
+		Genre(genre_litteraire=new_genre).save()
+		data = { 	
+					'field' : ArticleForm().visible_fields()[-1], 
+					'form' : ArticleForm(), 
+		 		}
+		return render(request, 'blog_livreSF/ajax_new_genre.html', data )
+	else:
+		data = {'success': 'False'}
+		return JsonResponse(data)
 
 
 

@@ -166,10 +166,16 @@ $(function(){
 			},
 
 			success: function(data){
-				$('#all_genre').html(data);
-				$('#hide_new_genre').hide();
-				$('#success_message').css('display', 'inline');
-			}
+				if (data.success == 'False') {
+					$('#success_message').hide();
+					$('#error_message').css('display', 'inline');
+				} else{
+					$('#all_genre').html(data);
+					$('#hide_new_genre').hide();
+					$('#error_message').hide();
+					$('#success_message').css('display', 'inline');
+				}
+			},
 		});
 	});
 });
@@ -187,10 +193,16 @@ $(function(){
 			},
 
 			success: function(data){
-				$('#all_tag').html(data); //Affiche la donnée
-				$('#hide_new_tag').hide(); //On cache le précédant form sur le tag, cf form_help.html
-				$('#success_message').css('display', 'inline');
-			}
+				if (data.success == 'False') {
+					$('#success_message').hide();
+					$('#error_message').css('display', 'inline');
+				} else{
+					$('#all_tag').html(data); //Affiche la donnée
+					$('#hide_new_tag').hide(); //On cache le précédant form sur le tag, cf form_help.html
+					$('#error_message').hide();
+					$('#success_message').css('display', 'inline');
+				}
+			},
 		});
 	});
 });
