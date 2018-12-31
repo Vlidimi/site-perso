@@ -4,7 +4,7 @@
 
 {% block content %} 
 
-<br>
+
 <div class="card border-dark " style="z-index: 1;right: 0; position: fixed; width: 20%;" >
     <div class="card">
     <div class="card-body">
@@ -43,6 +43,15 @@
     </div>
     </div>
 </div>
+
+<div class="presentation_onglet"> 
+     <h3 class="click_pour_derouler">Bienvenu dans l’onglet Livres :) <span id="question_mark">[?]</span> </h3>
+     <p class="message_deroule"> {% include './presentation_onglet_livre.html' %}  </p>
+     
+</div>
+<br>
+<br>
+<br>
 
 {% if posts %}
     {% for article in posts %} 
