@@ -336,6 +336,7 @@ div #entourer_connexion {
 #question_mark{
 	vertical-align: super; /*le mettre en exposant*/
 	font-size: 10px;
+	cursor: pointer;
 }
 #precision_question_mark {
     display: none;
@@ -398,4 +399,23 @@ div #nombre_message_non_lu {
 }
 .liste_tags:hover {
 	cursor: pointer;
+}
+
+
+.click_pour_derouler {
+	display: inline;
+	width: 75%;
+	float: left;
+}
+
+#click_pour_rabattre {
+	display: none;
+	width: 75%;
+	float: left;
+}
+
+.message_deroule {
+	display: none;
+	width: 75%;
+	float: left;
 }

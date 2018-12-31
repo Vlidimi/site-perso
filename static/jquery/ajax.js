@@ -207,6 +207,22 @@ $(function(){
 	});
 });
 
+$(function(){
+	$('.click_pour_derouler').click(function(){
+		$('#click_pour_rabattre').show();
+		$('.message_deroule').show();
+		$('.presentation_onglet #question_mark').hide();
+	
+	})
+	$('#click_pour_rabattre').click(function(){
+		$('.message_deroule').hide();
+		$('#click_pour_rabattre').hide();
+		$('.presentation_onglet #question_mark').show();
+	
+	})
+})
+
+
 // Faire apparaitre ou non les commentaires de l'auteur 
 $(function(){
 	$('#commentaire_auteur').click(function(){
