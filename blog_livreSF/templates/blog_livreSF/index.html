@@ -65,10 +65,12 @@
                                 <div class="card-body">
                                     <img class="float-right" style="color: #fff;height:8rem;background: center no-repeat;background-size: cover;" src="{{ MEDIA_URL }}{{ article.photo }}">
                                 <h4 class="card-title">{{ article.titre }} de {{ article.auteur_livre }}</h4> 
-                                <p class="card-title">Catégorie :
-                                {% for i in article.genre.all %} 
-                                        &nbsp; {{ i.genre_litteraire }} 
-                                {% endfor %} </p>
+                                {% if article.genre.all %}
+                                    <p class="card-title">Catégorie :
+                                    {% for i in article.genre.all %} 
+                                            &nbsp; {{ i.genre_litteraire }} 
+                                    {% endfor %} </p>
+                                {% endif %}
                                 <p class="card-title">
                                     Nombre de mots : {{ article.word_count}}
                                     <font style="float: right;margin-right: 1em;font-size: 20px"> 

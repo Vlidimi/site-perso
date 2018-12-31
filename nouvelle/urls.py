@@ -16,4 +16,6 @@ urlpatterns = [
 	path('<int:id>/<slug:slug>/likes/', views.NouvelleLikeToggle.as_view(), name='like-toggle'),
 	path('api/<int:id>/<slug:slug>/likes/', views.NouvelleLikeAPIToggle.as_view(), name='like-api-toggle'),
 	path('<int:id>/<slug:slug>/commentdelete/<int:pk>/', views.CommentDeleteView.as_view(), name='comment-delete'),
+	path('api/<int:id>/<slug:slug>/likes/', views.PostLikeAPIToggle.as_view(), name='like-api-toggle'),
+
 ]

@@ -259,3 +259,42 @@ def random_color(request):
 		color = color + color_list[entier_random]
 	data = { 'color_rand' : color}
 	return JsonResponse(data)
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from django.contrib.auth.models import User
+
+class PostLikeAPIToggle(APIView):
+	"""
+	View to list all users in the system.
+
+	* Requires token authentication.
+	* Only admin users are able to access this view.
+	"""
+	authentication_classes = (authentication.SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request, id=None, slug=None, format=None):
+		id_ = self.kwargs.get("id")
+		post = get_object_or_404(NouvelleEcrite, id=id_)
+		user = self.request.user
+		updated = False
+		liked = False
+		if user.is_authenticated:
+			if user in post.likes.all():
+				liked = False
+				post.likes.remove(user)
+			else:
+				liked = True
+				post.likes.add(user)
+			updated = True
+		count = post.likes.count()
+		data = {
+		"updated": updated,
+		"liked": liked,
+		"count": count,
+		}
+		return Response(data)

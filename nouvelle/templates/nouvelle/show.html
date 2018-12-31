@@ -58,7 +58,7 @@
 		Vous avez aimé ? Faites le savoir ! 
 		<br>
 		Smash that button
-		<a class='like-btn' data-href="{{ nouvelleecrite.get_like_api_url }}" href="{{ nouvelleecrite.get_like_url }}" position-photo="{{ MEDIA_URL }}" name-photo="{{ nouvelleecrite.slug }}">
+		<a class='like-btn' data-href="{{ nouvelleecrite.get_like_api_url }}" href="" position-photo="{{ MEDIA_URL }}" name-photo="{{ nouvelleecrite.slug }}">
 			{{ nouvelleecrite.likes.count }} 
 		    {% if user in nouvelleecrite.likes.all %}
 		        <img style="height:25px;margin-bottom: 7px;" src="{{ MEDIA_URL }}image_site/like_button.png">

@@ -47,15 +47,31 @@
                 <div class="card border-dark">
                     <div class="card-md-4">
                         <div class="card-body">
-                        <h4 class="card-title">
-                            {{ nouvelleecrite.titre }}
-                        </h4> 
-                        <p class="card-title">Tags :
-                                {% for i in nouvelleecrite.tag.all %} 
-                                        &nbsp; {{ i.tags }} 
-                                {% endfor %} </p>
-
-                                <p class="card-title">Nombre de mots : {{ nouvelleecrite.word_count}} </p>
+                            <h4 class="card-title">
+                                {{ nouvelleecrite.titre }}
+                            </h4> 
+                            {% if nouvelleecrite.tag.all %}
+                                <p class="card-title">Tags :
+                                        {% for i in nouvelleecrite.tag.all %} 
+                                                &nbsp; {{ i.tags }} 
+                                        {% endfor %} 
+                                </p>
+                            {% endif %}
+                            <p class="card-title">
+                                Nombre de mots : {{ nouvelleecrite.word_count}}
+                                <font style="float: right;margin-right: 1em;font-size: 20px"> 
+                                    <a class='like-btn' data-href="{{ nouvelleecrite.get_like_api_url }}" href ="" position-photo="{{ MEDIA_URL }}" name-photo="{{ nouvelleecrite.slug }}">
+                                        {{ nouvelleecrite.likes.count }} 
+                                        {% if user in nouvelleecrite.likes.all %}
+                                            <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/like_button.png">
+                                        {% else %}
+                                            <img style="height:25px;margin-bottom: 9px;" src="{{ MEDIA_URL }}image_site/no_like_button.png">
+                                        {% endif %}
+                                    </a>  
+                                    <img id="{{ nouvelleecrite.slug }}" style="height:25px;margin-bottom: 9px; display: none" src="{{ MEDIA_URL }}image_site/like_button.png"> 
+                                </font>
+                            </p>
+                            
                         </div>
                     </div>
                     <div class="card-md-4">
