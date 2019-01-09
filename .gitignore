@@ -4,3 +4,4 @@ myenv
 db.sqlite3
 media/
 .DS_Store
+Site_perso/settings.py
