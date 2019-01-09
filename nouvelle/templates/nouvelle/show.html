@@ -77,11 +77,10 @@
 	<p id="commentaire_auteur" style="font-weight: bold">
 		Informations additionnelles de l'auteur
 	</p>
-	<p id="confirmation_commentaire_auteur" style="display: none">Etes-vous sur de vouloir regarder ce qu'a pu ajouter l'auteur ? Ce ne sont que des informations additionnelles qui ne font pas parti de la nouvelle. Je ne saurai trop vous conseiller de revenir lire cette partie lorsque vous vous serez fait une idée personnelle de cette nouvelle avec votre interprétation pour qu'ensuite vous la confrontriez avec celle de l'auteur. 
+	<p id="confirmation_commentaire_auteur" style="display: none">Etes-vous sur de vouloir regarder ce qu'a pu ajouter l'auteur ? Ce ne sont que des informations additionnelles qui ne font pas parties de la nouvelle. Je ne saurai trop vous conseiller de revenir lire cette partie lorsque vous vous serez fait une idée personnelle de cette nouvelle avec votre interprétation pour qu'ensuite vous la confrontriez avec celle de l'auteur. 
 
 		Si c'est déjà fait ou si vous êtes un petit rebelle ne faisant fi de mes recommendations, et bien cliquez <span id="confirmation_commentaire_auteur_ok" style="font-weight: bold; display: none">Ici</span></p>
-	<div id="commentaire_auteur_show" style="display: none" > YO
-		{{ nouvelleecrite.information_additionnelle|markdown }} 
+	<div id="commentaire_auteur_show" style="display: none" > {{ nouvelleecrite.information_additionnelle|markdown }} 
 	</div>
 </div>
 {% if user.username == nouvelleecrite.auteur_nouvelle or user.is_superuser %}
