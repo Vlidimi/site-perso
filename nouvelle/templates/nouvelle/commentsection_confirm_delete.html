@@ -2,10 +2,7 @@
 {% block title %}Blog{% endblock %}
 
 {% block content %} 
-
-<!-- <form action="{% url 'blog_livreSF:write_a_blog' %}" method="post">
- -->
-    <h2> Etes vous sur de vouloir supprimer votre commentaire ?  </h2>
+<h2> Etes vous sur de vouloir supprimer votre commentaire ?  </h2>
     <div> Pour rappel : </div>
 <div class="container" style="left: 0;position: relative;" >
     <div class="card-group row" style="width: 100%; ">
@@ -39,11 +36,11 @@
     <button class="btn btn-outline-danger" style="display: none;" id="tenta3" >Yes, Delete</button>
     <button class="btn btn-outline-danger" style="display: none;" id="tenta4" >Yes, Delete</button>
     <button class="btn btn-outline-danger" style="display: none;" id="tenta5" isLast="True" >Yes, Delete</button>
-    <a id="cancel_button" class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.article.id object.article.slug %}">Cancel</a>
+    <a id="cancel_button" class="btn btn-outline-secondary" href="{% url 'nouvelle:show' object.nouvelle.id object.nouvelle.slug %}">Cancel</a>
  <form id="final_tenta" style="display: none" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     <input class="btn btn-outline-danger" type="submit" value="Yes, Delete" />
-    <a class="btn btn-outline-secondary" href="{% url 'blog_livreSF:show' object.article.id object.article.slug %}">Cancel</a>
+    <a class="btn btn-outline-secondary" href="{% url 'nouvelle:show' object.nouvelle.id object.nouvelle.slug %}">Cancel</a>
 </form>
 
 {% endblock %}

@@ -218,7 +218,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 	def get_success_url(self): #Renvoie l'url en cas de succès
 		post = self.get_object()
 		messages.warning(self.request, "Commentaire supprimé :o Vous êtes donc allé jusqu'au bout, je ne sais si je dois saluer votre motivation :p J'espère quand même que ce n'était qu'un méchant commentaire :3")
-		return  reverse("nouvelle:show", kwargs={'id':post.article.id, 'slug':post.article.slug})
+		return  reverse("nouvelle:show", kwargs={'id':post.nouvelle.id, 'slug':post.nouvelle.slug})
 
 	def test_func(self): #Permet d'établir des conditions pour pouvoir faire l'action
 		post = self.get_object()
